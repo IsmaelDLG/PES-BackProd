@@ -1,5 +1,17 @@
 package com.pesados.purplepoint.api.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
+
 import com.pesados.purplepoint.api.PurplePointApplication;
 import com.pesados.purplepoint.api.model.alarm.Alarm;
 import com.pesados.purplepoint.api.model.alarm.AlarmService;
@@ -13,17 +25,6 @@ import com.pesados.purplepoint.api.model.report.Report;
 import com.pesados.purplepoint.api.model.report.ReportService;
 import com.pesados.purplepoint.api.model.user.User;
 import com.pesados.purplepoint.api.model.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 @Configuration
 class LoadDatabase {

@@ -135,7 +135,6 @@ public class DeviceController {
                     return deviceService.saveDevice(newDevice);
                 });
     }
-    @PreAuthorize("hasRole('ROLE_DEVICE')")
     @Operation(summary = "Update an existing Device Location by token", 
     		description = "Update the location given the token of an existing device.", tags = { "devices" })
     @ApiResponses(value = {
