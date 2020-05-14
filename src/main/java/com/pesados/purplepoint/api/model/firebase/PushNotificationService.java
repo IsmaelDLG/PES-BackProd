@@ -48,7 +48,10 @@ public class PushNotificationService {
 
     public void sendNotification(String token, String username) {
         try {
-            fcmService.sendMessage(token, username);
+            Map<String, String> data = new HashMap<>();
+
+            data.put("title", username+"are on their way to help you");
+            fcmService.sendMessage(token, username, data);
         } catch (InterruptedException | ExecutionException e) {
             logger.error(e.getMessage());
         }

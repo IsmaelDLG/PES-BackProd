@@ -59,7 +59,7 @@ public class DeviceController {
         }
     }
 
-    @Operation(summary = "Get All devices", description = "Get all devices created.", tags = {"device"})
+    @Operation(summary = "Get All devices", description = "Get all devices created.", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Device.class)))) })
@@ -137,7 +137,7 @@ public class DeviceController {
 
 
     // Notify user of incoming help
-    @Operation(summary = "Sends a notification to the user", description = "Notify the user who requested help that someone is coming.", tags = {"users"})
+    @Operation(summary = "Sends a notification to the user", description = "Notify the user who requested help that someone is coming.", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "User not found"),
