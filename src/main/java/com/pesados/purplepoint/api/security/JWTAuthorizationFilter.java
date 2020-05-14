@@ -47,9 +47,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	}
 
 	private void setUpSpringAuthentication(Claims claims) {
-
+		
+		
 		@SuppressWarnings("unchecked")
 		ArrayList<String> list = (ArrayList<String>) claims.get("authorities");
+		
 		List<SimpleGrantedAuthority> res = new ArrayList<SimpleGrantedAuthority>();
 
 		for (Iterator<String> it = list.iterator(); it.hasNext();) {

@@ -1,25 +1,18 @@
 package com.pesados.purplepoint.api.model.image;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import net.bytebuddy.utility.RandomString;
+
+import javax.imageio.ImageIO;
+import javax.persistence.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 
-import javax.imageio.ImageIO;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import net.bytebuddy.utility.RandomString;
-
 @Entity
-@Table(name = "Images")
+@Table(name = "Image")
 public class Image {
 	
 	public static String defaultUrl = "https://image.flaticon.com/icons/svg/1738/1738691.svg";

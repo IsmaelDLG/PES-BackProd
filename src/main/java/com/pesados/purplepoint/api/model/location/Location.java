@@ -6,17 +6,21 @@ import javax.persistence.*;
 @Table(name = "Locations")
 public class Location {
     @Schema(description = "Id of the location.", required = true)
-    @Column(name = "location_id")
-    private @Id @GeneratedValue Long location_id;
+    @Column(name = "locationId")
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long locationId;
+
     @Schema(description = "Latitude.", required = true)
     @Column(name = "latitude")
     private float latitude;
+
     @Column(name = "longitude")
     @Schema(description = "Longitude.", required = true)
     private float longitude;
+
     @Column(name = "accuracy")
     @Schema(description = "Accuracy.", required = true)
     private float accuracy;
+
     @Column(name = "timestamp")
     @Schema(description = "Timestamp of the moment the location was created.", required = true)
     private float timestamp;
@@ -31,8 +35,8 @@ public class Location {
         this.timestamp = timestamp;
     }
 
-    public Long getLocationId() { return location_id; }
-    public void setLocationId(Long locationId) { this.location_id = locationId; }
+    public Long getLocationId() { return locationId; }
+    public void setLocationId(Long locationId) { this.locationId = locationId; }
 
     public float getLatitude() { return latitude; }
     public void setLatitude(float latitude) { this.latitude = latitude; }

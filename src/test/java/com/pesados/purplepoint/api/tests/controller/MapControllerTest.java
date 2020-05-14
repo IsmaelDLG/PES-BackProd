@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
+import com.pesados.purplepoint.api.tests.utils.TestUtils;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -23,27 +21,13 @@ public class MapControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	
-	private String doLogin() throws Exception {
-		JSONObject user = new JSONObject();
-		user.put("email", "isma@gmail.com");
-		user.put("password", "1234");
-
-		MvcResult response = this.mockMvc.perform(MockMvcRequestBuilders
-				.post("/api/v1/users/login")
-				.contentType("application/json")
-				.content(user.toString()))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		JSONObject respUser = new JSONObject(response.getResponse().getContentAsString());
-		return ((String) respUser.get("token"));
-	}
-
 	@Test
 	public void shouldReturnAllReports() throws Exception {
-		String token = this.doLogin();
+		String token = TestUtils.doLogin(this.mockMvc);
 		
-		this.mockMvc.perform(get("/api/v1/map").header("Authorization", token)
+		this.mockMvc.perform(get("/api/v1/map")
+				.header("Authorization", token)
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
 				.contentType("application/json"))
 				.andDo(print())
 				.andExpect(status().isOk());
@@ -51,17 +35,18 @@ public class MapControllerTest {
 	
 	@Test
 	public void shouldReturnOneReport() throws Exception {
-		String token = this.doLogin();
+		String token = TestUtils.doLogin(this.mockMvc);
 		
 		this.mockMvc.perform(get("/api/v1/map/1").header("Authorization", token)
-				.contentType("application/json"))
+				.contentType("application/json")
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken))
 				.andDo(print())
 				.andExpect(status().isOk());
 	}
 	
 	@Test
 	public void shouldCreateOneReport() throws Exception {
-		String token = this.doLogin();
+		String token = TestUtils.doLogin(this.mockMvc);
 		
 		
 		JSONObject loc = new JSONObject();
@@ -79,6 +64,7 @@ public class MapControllerTest {
 		
 		this.mockMvc.perform(post("/api/v1/map").header("Authorization", token)
 				.contentType("application/json")
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
 				.content(test.toString()))
 				.andDo(print())
 				.andExpect(status().isOk());
