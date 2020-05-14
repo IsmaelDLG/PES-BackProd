@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-class AlarmNotFoundAdvice {
+class FirebaseTokenInvalidAdvice {
 
 	@ResponseBody
-	@ExceptionHandler(AlarmNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	String alarmNotFoundHandler(AlarmNotFoundException ex) {
+	@ExceptionHandler(FirebaseTokenInvalidException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	String badTokenHandler(FirebaseTokenInvalidException ex) {
 		return ex.getMessage();
 	}
 }

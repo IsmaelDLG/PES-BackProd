@@ -4,6 +4,9 @@ package com.pesados.purplepoint.api.controller;
 import com.pesados.purplepoint.api.exception.AlarmNotFoundException;
 import com.pesados.purplepoint.api.model.alarm.Alarm;
 import com.pesados.purplepoint.api.model.alarm.AlarmService;
+import com.pesados.purplepoint.api.model.device.Device;
+import com.pesados.purplepoint.api.model.device.DeviceService;
+import com.pesados.purplepoint.api.model.firebase.PushNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -11,25 +14,34 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1")
 public class AlarmController {
 
+
 	private final AlarmService alarmService;
 
-	AlarmController(AlarmService alarmService) {
+	private final DeviceService deviceService;
+
+	private final PushNotificationService pushNotificationService;
+
+	@Autowired
+	public AlarmController(AlarmService alarmService, DeviceService deviceService, PushNotificationService pushNotificationService) {
 		this.alarmService = alarmService;
+		this.deviceService = deviceService;
+		this.pushNotificationService = pushNotificationService;
 	}
 
-
 	// Creates a new alarm
-
-
+	// Sends notifications to all nearby devices within a 500 meters radius
 	@Operation(summary = "Create a new alarm",
 			description = "Adds a new alarm to the database with the information provided. ", tags = { "alarms" })
 	@ApiResponses(value = {
@@ -42,9 +54,42 @@ public class AlarmController {
 			@Parameter(description="Alarm to add. Cannot null or empty.",
 					required=true, schema=@Schema(implementation = Alarm.class))
 			@Valid @RequestBody Alarm alarmNew
-	) {
+	) {	List<Device> nearbyDevices = findNearbyDevices(alarmNew);
+		sendPushNotificationToDevices(nearbyDevices, alarmNew);
 		return alarmService.saveAlarm(alarmNew);
+	}
 
+	private void sendPushNotificationToDevices(List<Device> devices, Alarm alarmNew) {
+		/* franco es puta */
+		List<String> registrationTokens = new ArrayList<>();
+
+		for (int i = 0; i < devices.size(); ++i) {
+			registrationTokens.add(devices.get(i).getFirebaseToken());
+		}
+
+		pushNotificationService.sendMulticastPushNotification(registrationTokens, alarmNew);
+	}
+
+	// Encuentra todos los devices que están cerca de la localización de la alarma
+	// Se hace una query
+	public List<Device> findNearbyDevices(Alarm alarm) {
+		List<Device> allDevices = deviceService.getAll();
+		List<Device> result = new ArrayList<>();
+		// Parametros de la alarma
+		String alarmToken = alarm.getDeviceToken();
+		float alarmLatitude = alarm.getLocation().getLatitude();
+		float alarmLongitude = alarm.getLocation().getLongitude();
+
+		for (int i = 0; i < allDevices.size(); ++i) {
+			// Parametros para el Device tratado
+			float deviceLatitude = allDevices.get(i).getLocation().getLatitude();
+			float deviceLongitude = allDevices.get(i).getLocation().getLongitude();
+			String deviceToken = allDevices.get(i).getFirebaseToken();
+
+			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken))
+			result.add(allDevices.get(i));
+		}
+		return result;
 	}
 
 
@@ -85,7 +130,6 @@ public class AlarmController {
 
 
 	//Update an alarm
-
 	@Operation(summary = "Update an existing alarm by ID", description = "Update the username, Location, given the ID of an existing alarm", tags = {"alarms"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation"),
@@ -103,7 +147,6 @@ public class AlarmController {
 				.map(alarm -> {
 					alarm.setUsername(newAlarm.getUsername());
 					alarm.setLocation(newAlarm.getLocation());
-					alarm.setPanicbutton(true);
 					return alarmService.saveAlarm((alarm));
 				}).orElseGet(() -> {
 					newAlarm.setAlarmId(id);
@@ -113,7 +156,6 @@ public class AlarmController {
 	}
 
 	//Delete an Alarm
-
 	@Operation(summary = "Delete an alarm", description = "Delete an existing alarm given its id", tags = { "alarms" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation"),
@@ -126,5 +168,4 @@ public class AlarmController {
 	) {
 		alarmService.deleteAlarmById(id);
 	}
-
 }
