@@ -32,7 +32,7 @@ public class Report {
 	@JoinColumn(name = "report_loc")
 	private Location location;	
 	@Schema(description = "Reporter", required = true)
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "report_usr") 	
 	private User user;	
 	
