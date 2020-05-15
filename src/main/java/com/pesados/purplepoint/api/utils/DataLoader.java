@@ -56,11 +56,12 @@ class LoadDatabase {
   }
     
     @Bean
-    CommandLineRunner initMapDatabase(ReportService service) {
-  	  User usr = new User("test5", "test5","testingthis@gmail.com", "1234", "others");
-  	  
+    CommandLineRunner initMapDatabase(ReportService service) {  	  
       return args -> {
-        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.447615, (float)2.224420, (float)100, (float)0)), usr)));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.447615, (float)2.224420, (float)100, (float)0)), null)));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.415026309656994, (float)2.151603698730469, (float)-1, (float)-1)), null)));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.425597961179896, (float) 2.1958923339843754, (float)-1, (float)-1)), null)));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.39993938849367, (float)2.151260375976563, (float)-1, (float)-1)), null)));
       };
     }
 
