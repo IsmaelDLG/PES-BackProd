@@ -68,6 +68,8 @@ public class PushNotificationService {
         data.put("token", alarmNew.getDeviceToken());
         data.put("title", "notification.title");
         data.put("body", "notification.body");
+        data.put("onMyWay", "false");
+
         try {
             fcmService.sendMulticastMessageWithoutData(tokens, data);
         } catch (FirebaseMessagingException e) {
