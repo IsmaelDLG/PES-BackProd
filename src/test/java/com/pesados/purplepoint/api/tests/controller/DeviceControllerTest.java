@@ -95,12 +95,17 @@ public class DeviceControllerTest {
         device.put("location", location);
         device.put("user", user);
 
+        JSONObject username = new JSONObject();
+        username.put("username", "Puta");
+
         String token = TestUtils.doLogin(this.mockMvc);
 
         this.mockMvc.perform(post("/api/v1/devices/notifyuser/"+TestUtils.firebaseToken)
         		.header("Authorization", token)
         		.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
-                .param("username", "Isma")
+                .content(String.valueOf(username))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().is(200));

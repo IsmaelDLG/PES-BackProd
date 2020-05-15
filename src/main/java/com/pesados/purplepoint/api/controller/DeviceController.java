@@ -146,7 +146,7 @@ public class DeviceController {
     @PostMapping(path = "/devices/notifyuser/{firebasetoken}")
     void notifyUser(
             @Parameter(description = "Username of the user who is going to receive the notification.", required = true)
-            @RequestParam String username,
+            @RequestBody String username,
             @Parameter(description = "Token of the device that must recieve notification.", required = true)
             @PathVariable String firebasetoken
     ) {
