@@ -1,5 +1,18 @@
 package com.pesados.purplepoint.api.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+
 import com.pesados.purplepoint.api.PurplePointApplication;
 import com.pesados.purplepoint.api.model.alarm.Alarm;
 import com.pesados.purplepoint.api.model.alarm.AlarmService;
@@ -13,17 +26,6 @@ import com.pesados.purplepoint.api.model.report.Report;
 import com.pesados.purplepoint.api.model.report.ReportService;
 import com.pesados.purplepoint.api.model.user.User;
 import com.pesados.purplepoint.api.model.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 @Configuration
 class LoadDatabase {
@@ -56,10 +58,11 @@ class LoadDatabase {
     
     @Bean
     CommandLineRunner initMapDatabase(ReportService service) {
-  	  User usr = new User("test5", "test5","testingthis@gmail.com", "1234", "others");
-  	  
       return args -> {
-        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.447615, (float)2.224420, (float)100, (float)0)), usr)));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.447615, (float)2.224420, (float)100, (float)0)), new User("tonto1", "tonto1@mail.com"))));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.415026309656994, (float)2.151603698730469, (float)-1, (float)-1)), new User("tonto2", "tonto2@mail.com"))));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.425597961179896, (float) 2.1958923339843754, (float)-1, (float)-1)), new User("tonto3", "tonto3@mail.com"))));
+        logger.info("Preloading " + service.saveReport(new Report((new Location((float)41.39993938849367, (float)2.151260375976563, (float)-1, (float)-1)), new User("tonto4", "tont4o@mail.com"))));
       };
     }
 

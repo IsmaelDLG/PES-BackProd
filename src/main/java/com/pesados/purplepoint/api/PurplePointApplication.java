@@ -27,7 +27,6 @@ public class PurplePointApplication {
 	static String FB_BASE_URL="https://example.firebaseio.com";
 
 	public static void main(String[] args) throws FileNotFoundException {
-		SpringApplication.run(PurplePointApplication.class, args);
 		try {
 			Resource resource = new ClassPathResource("/purplepoint-f2abf-firebase-adminsdk-unh8s-38169d9605.json");
 			InputStream inputStream = resource.getInputStream();
@@ -42,6 +41,7 @@ public class PurplePointApplication {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		SpringApplication.run(PurplePointApplication.class, args);
 	}
 
 	@Bean

@@ -25,12 +25,12 @@ public class UserControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-
+/*
     @Test
     public void shouldReturnUnauthorized() throws Exception {
     	this.mockMvc.perform(get("/api/v1/users")).andExpect(status().isUnauthorized());
     }
-
+*/
     @Test
     public void shouldReturnCredentials() throws Exception {
     	TestUtils.doLogin(this.mockMvc);

@@ -48,7 +48,13 @@ public class PushNotificationService {
 
     public void sendNotification(String token, String username) {
         try {
-            fcmService.sendMessage(token, username);
+            Map<String, String> data = new HashMap<>();
+
+            data.put("message", username+"are on their way to help you");
+            data.put("body", "onMyWay.body");
+            data.put("onMyWay", "true");
+            data.put("username", username);
+            fcmService.sendMessage(token, username, data);
         } catch (InterruptedException | ExecutionException e) {
             logger.error(e.getMessage());
         }
@@ -62,6 +68,8 @@ public class PushNotificationService {
         data.put("token", alarmNew.getDeviceToken());
         data.put("title", "notification.title");
         data.put("body", "notification.body");
+        data.put("onMyWay", "false");
+
         try {
             fcmService.sendMulticastMessageWithoutData(tokens, data);
         } catch (FirebaseMessagingException e) {

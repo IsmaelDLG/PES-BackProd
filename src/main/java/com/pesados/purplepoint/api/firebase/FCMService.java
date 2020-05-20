@@ -18,12 +18,12 @@ public class FCMService {
 
     private Logger logger = LoggerFactory.getLogger(FCMService.class);
 
-    public void sendMessage(String token, String username)
+    public void sendMessage(String token, String username, Map<String, String> data)
             throws InterruptedException, ExecutionException {
 
         PushNotificationRequest request = new PushNotificationRequest( username+ "are on their way to help you", "");
 
-        Message message = getPreconfiguredMessageWithoutData(request, token);
+        Message message = getPreconfiguredMessageWithoutData(request, token, data);
         String response = sendAndGetResponse(message);
         logger.info("Sent message to "  + response);
     }
@@ -34,16 +34,24 @@ public class FCMService {
 
         PushNotificationRequest request = new PushNotificationRequest("Your help is needed", "A person near to you needs your help");
         MulticastMessage multicastmessage = getPreconfiguredMulticatsMessageWithoutData(request, tokens, data);
-        BatchResponse response = sendMulticastAndGetResponse(multicastmessage);
-        logger.info("Sent message without data. Total Messages: " + tokens.size()+ ", Sended OK: " + response.getSuccessCount() + ", Not Sended" + response.getFailureCount());
+        int response = sendMulticastAndGetResponse(multicastmessage);
+        logger.info("Sent message without data. Total Messages: " + tokens.size()+ ", Sended OK: " + response);
     }
 
     private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
         return FirebaseMessaging.getInstance().sendAsync(message).get();
     }
 
-    private BatchResponse sendMulticastAndGetResponse(MulticastMessage multicastMessage) throws FirebaseMessagingException {
-        return FirebaseMessaging.getInstance().sendMulticast(multicastMessage);
+    private int sendMulticastAndGetResponse(MulticastMessage multicastMessage) {
+
+        try{
+            return FirebaseMessaging.getInstance().sendMulticast(multicastMessage).getSuccessCount();
+
+        } catch(FirebaseMessagingException e){
+            int mes = 0;
+            return mes;
+
+        }
     }
 
     private AndroidConfig getAndroidConfig(String topic) {
@@ -59,9 +67,8 @@ public class FCMService {
                 .setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();
     }
 
-    private Message getPreconfiguredMessageWithoutData(PushNotificationRequest request, String token ){
-        return getPreconfiguredMessageBuilder(request, token)
-                .build();
+    private Message getPreconfiguredMessageWithoutData(PushNotificationRequest request, String token, Map<String, String> data){
+        return getPreconfiguredMessageBuilder(request,token).putAllData(data).build();
     }
 
     private MulticastMessage getPreconfiguredMulticatsMessageWithoutData(PushNotificationRequest request, List<String> tokens, Map<String, String> data) {

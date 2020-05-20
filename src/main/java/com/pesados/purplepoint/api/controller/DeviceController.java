@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,15 +28,13 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class DeviceController {
 
-    private final DeviceService deviceService;
-    private final UserService userService;
-    private final PushNotificationService pushNotificationService;
-
-    public DeviceController(DeviceService deviceService, UserService userService, PushNotificationService pushNotificationService) {
-        this.deviceService = deviceService;
-        this.userService = userService;
-        this.pushNotificationService = pushNotificationService;
-    }
+	@Autowired
+    private DeviceService deviceService;
+	
+	@Autowired
+    private UserService userService;
+	@Autowired
+	private PushNotificationService pushNotificationService;
 
     @Operation(summary = "Add a new device",
             description = "Adds a new device to the database with the information provided.", tags = { "devices" })
@@ -60,7 +59,7 @@ public class DeviceController {
         }
     }
 
-    @Operation(summary = "Get All devices", description = "Get all devices created.", tags = {"device"})
+    @Operation(summary = "Get All devices", description = "Get all devices created.", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Device.class)))) })
@@ -89,7 +88,7 @@ public class DeviceController {
         deviceService.deleteDeviceById(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_DEVICE')")
     @Operation(summary = "Update an existing Device by token", 
     		description = "Update the token, user and/or location given the token of an existing device.", tags = { "devices" })
     @ApiResponses(value = {
@@ -98,44 +97,25 @@ public class DeviceController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "405", description = "Validation exception")})
-    @PutMapping(value = "/devices/{token}", consumes = {"application/json", "application/xml"})
-    Device updateDeviceToken(@Parameter(description = "New information for the device.", required = true)
+    @PutMapping("/devices/{token}" )
+    Device updateDeviceByToken(@Parameter(description = "New information for the device.", required = true)
                             @RequestBody Device newDevice,
                             @Parameter(description = "Token of the device to replace.", required = true)
-    						@PathVariable String token,
-    						@RequestHeader("X-Authorization-Firebase") String firebaseToken
+    						@PathVariable String token
     ) {
-        User deviceUser = null;
-        try  {
-            deviceUser = userService.getUserByEmail(newDevice.getUser().getEmail())
-            		.orElseThrow(() -> new UserNotFoundException(newDevice.getUser().getEmail()));
-        } catch (UserNotFoundException e) {
-            return deviceService.getDeviceByFirebaseToken(token)
-                    .map(device -> {
-                        device.setFirebaseToken(newDevice.getFirebaseToken());
-                        device.setLocation(newDevice.getLocation());
-                        device.setUser(newDevice.getUser());
-                        return deviceService.saveDevice(device);
-                    })
-                    .orElseGet(() -> {
-                        newDevice.setFirebaseToken(firebaseToken);
-                        return deviceService.saveDevice(newDevice);
-                    });
-        }
-        User finalDeviceUser = deviceUser;
-        return deviceService.getDeviceByFirebaseToken(token)
-                .map(device -> {
-                    device.setFirebaseToken(newDevice.getFirebaseToken());
-                    device.setLocation(newDevice.getLocation());
-                    device.setUser(userService.saveUser(finalDeviceUser));
-                    return deviceService.saveDevice(device);
-                })
-                .orElseGet(() -> {
-                    newDevice.setFirebaseToken(firebaseToken);
-                    return deviceService.saveDevice(newDevice);
-                });
+      return deviceService.getDeviceByFirebaseToken(token)
+	      .map(device -> {
+	          device.setFirebaseToken(newDevice.getFirebaseToken());
+	          device.setLocation(newDevice.getLocation());
+	          device.setUser(newDevice.getUser());
+	          return deviceService.saveDevice(device);
+	      })
+	      .orElseGet(() -> {
+	          return deviceService.saveDevice(newDevice);
+	      });
+
     }
-    @PreAuthorize("hasRole('ROLE_DEVICE')")
+    
     @Operation(summary = "Update an existing Device Location by token", 
     		description = "Update the location given the token of an existing device.", tags = { "devices" })
     @ApiResponses(value = {
@@ -150,17 +130,14 @@ public class DeviceController {
                             @Parameter(description = "Token of the device to replace.", required = true)
     						@PathVariable String token
     ) {
-        return deviceService.getDeviceByFirebaseToken(token)
-	        .map(device -> {
-	            device.setLocation(newLocation);
-	            return deviceService.saveDevice(device);
-	        }).orElseThrow(() -> new DeviceNotFoundException(token));
-        
+        Device dev = deviceService.getDeviceByFirebaseToken(token).orElseThrow(() -> new DeviceNotFoundException(token));
+        dev.setLocation(newLocation);
+        return deviceService.saveDevice(dev);
     }
 
 
     // Notify user of incoming help
-    @Operation(summary = "Sends a notification to the user", description = "Notify the user who requested help that someone is coming.", tags = {"users"})
+    @Operation(summary = "Sends a notification to the user", description = "Notify the user who requested help that someone is coming.", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -169,14 +146,14 @@ public class DeviceController {
     @PostMapping(path = "/devices/notifyuser/{firebasetoken}")
     void notifyUser(
             @Parameter(description = "Username of the user who is going to receive the notification.", required = true)
-            @RequestParam String username,
+            @RequestBody User user,
             @Parameter(description = "Token of the device that must recieve notification.", required = true)
             @PathVariable String firebasetoken
     ) {
-        if (username == "")
+        if (user.getUsername() == "")
             pushNotificationService.sendNotification(firebasetoken, "Someone");
         else
-            pushNotificationService.sendNotification(firebasetoken, username);
+            pushNotificationService.sendNotification(firebasetoken, user.getUsername());
     }
 
     /* 
