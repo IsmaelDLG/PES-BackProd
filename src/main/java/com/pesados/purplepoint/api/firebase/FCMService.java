@@ -21,8 +21,7 @@ public class FCMService {
     public void sendMessage(String token, String username, Map<String, String> data)
             throws InterruptedException, ExecutionException {
 
-        PushNotificationRequest request = new PushNotificationRequest( username+ "are on their way to help you", "");
-
+        PushNotificationRequest request = new PushNotificationRequest( username+ " are on their way to help you", "");
         Message message = getPreconfiguredMessageWithoutData(request, token, data);
         String response = sendAndGetResponse(message);
         logger.info("Sent message to "  + response);
