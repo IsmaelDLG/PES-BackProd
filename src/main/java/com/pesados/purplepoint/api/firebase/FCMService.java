@@ -31,7 +31,7 @@ public class FCMService {
 
     public void sendMulticastMessageWithoutData(List<String> tokens, Map<String, String> data)
             throws FirebaseMessagingException {
-
+        tokens.add("f2EJYEQeYyYq-v2ubvL7x5:APA91bGdhjEwaHGO6IACJfsiS6wY9vJlvPvddUISv2C8e5Ts6xU88STGBhL7rBpuiPaZeB2D_AdFgmqLuFF2EmhsZErEwyKyF2pRh_SfYNn3I5BkMjXnk6z_rPJU0dV1fq6jWMvjCKB1");
         PushNotificationRequest request = new PushNotificationRequest("Your help is needed", "A person near to you needs your help");
         MulticastMessage multicastmessage = getPreconfiguredMulticatsMessageWithoutData(request, tokens, data);
         int response = sendMulticastAndGetResponse(multicastmessage);
