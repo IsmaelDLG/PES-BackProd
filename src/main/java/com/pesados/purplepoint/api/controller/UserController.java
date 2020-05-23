@@ -27,6 +27,7 @@ import java.io.IOException;
 import com.pesados.purplepoint.api.exception.UserNotFoundException;
 import com.pesados.purplepoint.api.exception.UserRegisterBadRequestException;
 import com.pesados.purplepoint.api.exception.WrongPasswordException;
+import com.pesados.purplepoint.api.model.image.Image;
 import com.pesados.purplepoint.api.model.image.ImageService;
 import com.pesados.purplepoint.api.model.user.User;
 import com.pesados.purplepoint.api.model.user.UserService;
@@ -40,14 +41,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
+import java.util.Base64;
 
 
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
 	private final UserService userService;
-
+	private final ImageService imgService;
 	@ModelAttribute
 	public void setResponseHeader(HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -225,7 +226,7 @@ public class UserController {
 				   @Parameter(description = "id of the user to replace.", required = true)
 				   @PathVariable long id
 	) throws IOException {
-		Image img = imgService.saveImage(new Image(file.getName(), "image/jpg", file.getBytes()));
+		Image img = imgService.saveImage(new Image(file.getName(), "image/jpg", Base64.getEncoder().encodeToString(file.getBytes())));
 		return userService.getUserById(id)
 				.map(user -> {
 					user.setProfilePic(img);
