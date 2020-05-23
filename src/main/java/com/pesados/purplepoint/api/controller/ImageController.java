@@ -1,8 +1,11 @@
 package com.pesados.purplepoint.api.controller;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pesados.purplepoint.api.PurplePointApplication;
 import com.pesados.purplepoint.api.exception.ImageNotFoundException;
 import com.pesados.purplepoint.api.model.image.Image;
 import com.pesados.purplepoint.api.model.image.ImageService;
@@ -29,6 +33,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class ImageController {
 	
 	private final ImageService imgService;
+	private static final Logger logger = LoggerFactory.getLogger(PurplePointApplication.class);
 
 	  
 	  ImageController(ImageService imgService) {
@@ -47,7 +52,21 @@ public class ImageController {
 	         @ApiResponse(responseCode = "409", description = "Image already exists") })
 	  @PostMapping(value = "/images", consumes = { "multipart/form-data"})
 	  Image newPic(@Parameter(description="New pic", required = true) @RequestParam("file") MultipartFile file) throws IOException {
-		return imgService.saveImage(new Image(file.getName(),"image/jpg",file.getBytes()));
+		return imgService.saveImage(new Image(file.getOriginalFilename(), file.getContentType(), Base64.getEncoder().encodeToString(file.getBytes())));
+	}
+	  
+	@Operation(summary = "Parse an image", 
+		  description = "Parses an image provided. ", 
+		  tags = { "images" })
+	@ApiResponses(value = {
+	   @ApiResponse(responseCode = "200", description = "This is fine", 
+			   content = @Content(schema = @Schema(implementation = Image.class))),
+	   @ApiResponse(responseCode = "400", description = "Invalid input")
+	})
+	@PostMapping(value = "/images/parser", consumes = { "multipart/form-data"})
+	Image parsePic(@Parameter(description="New pic", required = true) @RequestParam("file") MultipartFile file) throws IOException {
+		logger.info(file.getContentType());
+		return new Image(file.getName(), file.getContentType(), Base64.getEncoder().encodeToString(file.getBytes()));
 	}  
 	  
 	@Operation(summary = "Get All Images", description = "Get ", tags = {"images"})

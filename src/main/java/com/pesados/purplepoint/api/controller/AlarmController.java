@@ -86,7 +86,7 @@ public class AlarmController {
 			float deviceLongitude = allDevices.get(i).getLocation().getLongitude();
 			String deviceToken = allDevices.get(i).getFirebaseToken();
 
-			if (!alarmToken.equals(deviceToken))
+			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken))
 			result.add(allDevices.get(i));
 		}
 		return result;
