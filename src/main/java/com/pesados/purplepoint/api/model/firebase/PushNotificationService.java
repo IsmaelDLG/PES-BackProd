@@ -50,10 +50,14 @@ public class PushNotificationService {
         try {
             Map<String, String> data = new HashMap<>();
 
-            data.put("message", username+"are on their way to help you");
+            data.put("message", username+" are on their way to help you");
             data.put("body", "onMyWay.body");
             data.put("onMyWay", "true");
-            data.put("username", username);
+
+            if (username =="Someone"){
+                data.put("username", "");
+            } else data.put("username", username);
+            data.put("someone", "onMyWay.someone");
             fcmService.sendMessage(token, username, data);
         } catch (InterruptedException | ExecutionException e) {
             logger.error(e.getMessage());

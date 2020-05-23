@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pesados.purplepoint.api.exception.ReportNotFoundException;
 import com.pesados.purplepoint.api.model.report.Report;
 import com.pesados.purplepoint.api.model.report.ReportService;
+import com.pesados.purplepoint.api.model.user.User;
+import com.pesados.purplepoint.api.model.user.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,13 +30,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/v1")
 public class MapController {
-	
-	private final ReportService reportService;
+	@Autowired
+	private ReportService reportService;
+	@Autowired
+	private UserService userService;
 
-	  
-	  MapController(ReportService reportService) {
-	    this.reportService = reportService;
-	  }
 	  
 	// Register new user
 
@@ -51,8 +52,12 @@ public class MapController {
 						required=true, schema=@Schema(implementation = Report.class))
 				@Valid @RequestBody Report newRep
 		) {
+			newRep.setUser(userService.getUserByEmail(newRep.getUser().getEmail()).orElseGet(() -> {
+					return userService.saveUser(new User(newRep.getUser().getEmail(), "Default"));
+				}));
 			return this.reportService.saveReport(newRep);
 		} 
+		
 	  
 	@Operation(summary = "Get All Reports", description = "Get ", tags = {"reports"})
 	@ApiResponses(value = {
