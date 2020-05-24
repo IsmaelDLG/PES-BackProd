@@ -1,6 +1,5 @@
 package com.pesados.purplepoint.api.tests.controller;
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -23,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.pesados.purplepoint.api.controller.AlarmController;
+import com.pesados.purplepoint.api.controller.LoginSystem;
 import com.pesados.purplepoint.api.model.alarm.Alarm;
 import com.pesados.purplepoint.api.model.alarm.AlarmService;
 import com.pesados.purplepoint.api.model.device.Device;
@@ -30,7 +30,7 @@ import com.pesados.purplepoint.api.model.device.DeviceService;
 import com.pesados.purplepoint.api.model.firebase.PushNotificationService;
 import com.pesados.purplepoint.api.model.location.Location;
 import com.pesados.purplepoint.api.model.user.User;
-import com.pesados.purplepoint.api.tests.utils.TestUtils;;
+import com.pesados.purplepoint.api.tests.utils.TestUtils;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -38,6 +38,9 @@ public class AlarmControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+
+	@Autowired
+	private LoginSystem loginSystem;
 
 	@Autowired
 	private DeviceService deviceService;
@@ -226,7 +229,7 @@ public class AlarmControllerTest {
 		Optional<Device> deviceOpt = deviceService.getDeviceByFirebaseToken(TestUtils.firebaseToken);
 		expectedResult.add(deviceOpt.get());
 
-		AlarmController alarmController = new AlarmController(this.alarmService, this.deviceService, this.pushNotificationService);
+		AlarmController alarmController = new AlarmController(this.alarmService, this.deviceService, this.pushNotificationService, this.loginSystem);
 
 		List<Device> result = alarmController.findNearbyDevices(stubAlarm);
 
