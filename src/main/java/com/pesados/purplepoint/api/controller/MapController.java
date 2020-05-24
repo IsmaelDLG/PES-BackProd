@@ -51,8 +51,9 @@ public class MapController {
 			@Valid @RequestBody Report newRep
 	) {
 		newRep.setUser(userService.getUserByEmail(newRep.getUser().getEmail()).orElseGet(() -> {
-				return userService.saveUser(new User(newRep.getUser().getEmail(), "Default"));
-			}));
+				return userService.saveUser(new User(newRep.getUser().getEmail(), "Default_" + userService.getAll().size()));
+			})
+		);
 		return this.reportService.saveReport(newRep);
 	} 
 		
