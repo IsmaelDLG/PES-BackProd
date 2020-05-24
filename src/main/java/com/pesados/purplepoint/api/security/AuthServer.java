@@ -14,7 +14,7 @@ public class AuthServer extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 				.csrf().disable()
-				.addFilterAfter(new FirebaseAuthorizationFilter(new FirebaseParser()), UsernamePasswordAuthenticationFilter.class)
+				//.addFilterAfter(new FirebaseAuthorizationFilter(new FirebaseParser()), UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(new CORSFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
                     .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll()
