@@ -96,7 +96,7 @@ class LoadDatabase {
     CommandLineRunner initDeviceDatabase(DeviceService service) {
         return args -> {
             // Location "Mi Casa"
-            logger.info("Preloading " + service.saveDevice(new Device("f2EJYEQeYyYq-v2ubvL7x5:APA91bFam-no_lk9-kryCZol_dXDEtRjyd_iyAORuLDuLgLmyblUhYE9sYV1Prj4ohxnt6-EM_tDBVOkhnV08e2szqCGjNBRap5vnRwzBVf0iCMzlCphZiAWCkRWiDx0pB71dZEj2Ej5", new Location((float)41.447612, (float)2.224417, 100, 0), new User())));
+            logger.info("Preloading " + service.saveDevice(new Device("cUp2XzhPe9MysvfL3J4f9O:APA91bFHVzjQGftg1Ae-kSibDwIWflLm73D-KpVzwJscLvnZrF8oyda9dKDGP3zI8YgroOyFpExbdakK_7bHWr7pzHpVSbtOtASm1dJzjUMcjfsoNyOkYSs5uUcVaoIVbL8qI90B6m0H", new Location((float)41.447612, (float)2.224417, 100, 0), new User())));
             // Location "bar"
             logger.info("Preloading " + service.saveDevice(new Device("2", new Location((float)41.447379, (float)2.226842, (float)100, (float)0), new User())));
             // Location "china"

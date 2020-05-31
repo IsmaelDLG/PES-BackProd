@@ -19,7 +19,7 @@ public class AuthServer extends WebSecurityConfigurerAdapter {
 			.addFilterBefore(new CORSFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeRequests()
 				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll()
-				.antMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
+				.antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //allow CORS option calls
 			.anyRequest().permitAll()
 			.and()
 			.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
