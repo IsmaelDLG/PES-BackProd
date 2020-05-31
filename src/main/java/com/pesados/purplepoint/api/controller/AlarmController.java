@@ -2,6 +2,7 @@ package com.pesados.purplepoint.api.controller;
 
 
 import com.pesados.purplepoint.api.exception.AlarmNotFoundException;
+import com.pesados.purplepoint.api.exception.UnauthorizedDeviceException;
 import com.pesados.purplepoint.api.model.alarm.Alarm;
 import com.pesados.purplepoint.api.model.alarm.AlarmService;
 import com.pesados.purplepoint.api.model.device.Device;
@@ -33,13 +34,20 @@ public class AlarmController {
 
 	private final PushNotificationService pushNotificationService;
 
+	private final LoginSystem loginSystem;
+
 	@Autowired
-	public AlarmController(AlarmService alarmService, DeviceService deviceService, PushNotificationService pushNotificationService) {
+	public AlarmController(AlarmService alarmService, 
+		DeviceService deviceService, 
+		PushNotificationService pushNotificationService,
+		LoginSystem loginSystem) {
 		this.alarmService = alarmService;
 		this.deviceService = deviceService;
 		this.pushNotificationService = pushNotificationService;
+		this.loginSystem = loginSystem;
 	}
 
+	// Visibilidad Device
 	// Creates a new alarm
 	// Sends notifications to all nearby devices within a 500 meters radius
 	@Operation(summary = "Create a new alarm",
@@ -54,7 +62,8 @@ public class AlarmController {
 			@Parameter(description="Alarm to add. Cannot null or empty.",
 					required=true, schema=@Schema(implementation = Alarm.class))
 			@Valid @RequestBody Alarm alarmNew
-	) {	List<Device> nearbyDevices = findNearbyDevices(alarmNew);
+	) {	
+		List<Device> nearbyDevices = findNearbyDevices(alarmNew);
 		sendPushNotificationToDevices(nearbyDevices, alarmNew);
 		return alarmService.saveAlarm(alarmNew);
 	}
@@ -86,50 +95,64 @@ public class AlarmController {
 			float deviceLongitude = allDevices.get(i).getLocation().getLongitude();
 			String deviceToken = allDevices.get(i).getFirebaseToken();
 
-			if (!alarmToken.equals(deviceToken))
+			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken))
 			result.add(allDevices.get(i));
 		}
 		return result;
 	}
 
-
-	// Get all alarms
-
+	// Visibilidad User
 	@Operation(summary = "Get All Alarms", description = "Get all the existing alarms", tags = {"alarms"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation",
 					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Alarm.class))))})
 	@GetMapping(value = "/alarms", produces = {"application/json", "application/xml"})
-	List<Alarm> all() {
-		return alarmService.getAll();
+	List<Alarm> all(
+		@RequestHeader("Authorization") String unformatedJWT
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return alarmService.getAll();
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
 	}
 
-	//Get an alarm by its Id
-
+	// Visibilidad User
 	@Operation(summary = "Get Alarm By ID", description = "Get an Alarm from an existing ID value you want to look up", tags = {"alarms"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation",
 					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Alarm.class))))})
 	@GetMapping(value = "/alarms/{id}", produces = {"application/json", "application/xml"})
 	Alarm getbyId(
-			@Parameter(description = "ID of the contact to search.", required = true)
-			@PathVariable long id) {
-		return alarmService.getAlarmById(id).orElseThrow(() -> new AlarmNotFoundException(id));
+		@RequestHeader("Authorization") String unformatedJWT,
+		@Parameter(description = "ID of the contact to search.", required = true)
+		@PathVariable long id) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return alarmService.getAlarmById(id).orElseThrow(() -> new AlarmNotFoundException(id));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
 	}
 
+	// Visibilidad User
 	@Operation(summary = "Get Alarm By Username", description = "Get an Alarm by its username", tags = {"alarms"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation",
 					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Alarm.class))))})
 	@GetMapping(value = "/alarms/username/{username}", produces = {"application/json", "application/xml"})
 	Alarm getbyUsername(
-			@Parameter(description = "username of the person who pressed the panic button.", required = true)
-			@PathVariable String username){
-		return alarmService.getAlarmByUsername(username).orElseThrow(() -> new AlarmNotFoundException(username));
+		@RequestHeader("Authorization") String unformatedJWT,
+		@Parameter(description = "username of the person who pressed the panic button.", required = true)
+		@PathVariable String username){
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return alarmService.getAlarmByUsername(username).orElseThrow(() -> new AlarmNotFoundException(username));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
 	}
 
 
-	//Update an alarm
+	// Visibilidad User
 	@Operation(summary = "Update an existing alarm by ID", description = "Update the username, Location, given the ID of an existing alarm", tags = {"alarms"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation"),
@@ -138,12 +161,15 @@ public class AlarmController {
 			@ApiResponse(responseCode = "404", description = "Alarm not found"),
 			@ApiResponse(responseCode = "405", description = "Validation exception")})
 	@PutMapping("/alarms/update/ {id}")
-	Alarm replaceAlarmbyID(@Parameter(description = "New information for the alarm.", required = true)
-						   @RequestBody Alarm newAlarm,
-						   @Parameter(description = "id of the alarm to replace.", required = true)
-						   @PathVariable long id
+	Alarm replaceAlarmbyID(
+		@RequestHeader("Authorization") String unformatedJWT,
+		@Parameter(description = "New information for the alarm.", required = true)
+		@RequestBody Alarm newAlarm,
+		@Parameter(description = "id of the alarm to replace.", required = true)
+		@PathVariable long id
 	) {
-		return alarmService.getAlarmById(id)
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return alarmService.getAlarmById(id)
 				.map(alarm -> {
 					alarm.setUsername(newAlarm.getUsername());
 					alarm.setLocation(newAlarm.getLocation());
@@ -152,20 +178,27 @@ public class AlarmController {
 					newAlarm.setAlarmId(id);
 					return alarmService.saveAlarm(newAlarm);
 
-				});
+				});	
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
 	}
 
-	//Delete an Alarm
+	// Visibilidad User
 	@Operation(summary = "Delete an alarm", description = "Delete an existing alarm given its id", tags = { "alarms" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation"),
 			@ApiResponse(responseCode = "404", description = "Alarm not found") })
 	@DeleteMapping(path="/alarms/delete/{id}")
 	void deleyeAlarm(
-			@Parameter(description="Id of the alarm to be deleted. Cannot be empty.",
-					required=true)
-			@PathVariable long id
+		@RequestHeader("Authorization") String unformatedJWT,
+		@Parameter(description="Id of the alarm to be deleted. Cannot be empty.", required=true)
+		@PathVariable long id
 	) {
-		alarmService.deleteAlarmById(id);
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			alarmService.deleteAlarmById(id);
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
 	}
 }

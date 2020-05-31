@@ -5,18 +5,12 @@ import com.pesados.purplepoint.api.firebase.FCMService;
 import com.pesados.purplepoint.api.model.alarm.Alarm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Service
 public class PushNotificationService {
@@ -50,14 +44,10 @@ public class PushNotificationService {
         try {
             Map<String, String> data = new HashMap<>();
 
-            data.put("message", username+" are on their way to help you");
+            data.put("message", username+"are on their way to help you");
             data.put("body", "onMyWay.body");
             data.put("onMyWay", "true");
-
-            if (username =="Someone"){
-                data.put("username", "");
-            } else data.put("username", username);
-            data.put("someone", "onMyWay.someone");
+            data.put("username", username);
             fcmService.sendMessage(token, username, data);
         } catch (InterruptedException | ExecutionException e) {
             logger.error(e.getMessage());

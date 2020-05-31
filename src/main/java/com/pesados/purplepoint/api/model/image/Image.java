@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.Date;
 
 @Entity
@@ -28,17 +29,16 @@ public class Image {
 	@Schema(description = "Type of the image.", required = false)
     @Column(name = "type")
 	private String type;
-	@Schema(description = "Image bytes.", type="String", format="Bytes", required = true)
-	@Column(name = "picByte")
+	@Schema(description = "Image bytes.", required = true)
+	@Column(name = "picByteB64")
 	@Lob
-	private byte[] picByte;
+	private String picByteB64;
 	
 	public Image() {
 		super();
 	}
 	
-	public Image(String name, String type, byte[] picByte) {
-		// Ho fem una mica antibalas
+	private String format(String name, String type) {
 		int i = name.indexOf(".");
 		if (i != -1) {
 			name = name.substring(0, i) 
@@ -53,10 +53,15 @@ public class Image {
 				name += "." + type;
 			}
 		}
-		
-		this.imgname = name ;
+		return name;
+	}
+	
+	
+	public Image(String name, String type, String picByteB64) {
+		// Ho fem una mica antibalas
+		this.imgname = this.format(name, type) ;
 		this.type = type;
-		this.picByte = picByte;
+		this.picByteB64 = picByteB64;
 	}	
 	
 	public Image(String myUrl) throws IOException {
@@ -81,7 +86,8 @@ public class Image {
         // Create Random file name but unique by adding timestamp with extension
 
         this.imgname = RandomString.make() + new Date().getTime() + ".svg";
-        this.picByte = byteArrayOutputStream.toByteArray();
+        this.picByteB64 = Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+
         this.type = "image/svg";
 
         byteArrayOutputStream.close(); // Close once it is done saving
@@ -111,11 +117,11 @@ public class Image {
 		return this.type;
 	}
 	
-	public void setPicByte(byte[] data) {
-		this.picByte = data;
+	public void setPicByteB64(String data) {
+		this.picByteB64 = data;
 	}
 	
-	public byte[] getPicByte() {
-		return this.picByte;
+	public String getPicByteB64() {
+		return this.picByteB64;
 	}
 }

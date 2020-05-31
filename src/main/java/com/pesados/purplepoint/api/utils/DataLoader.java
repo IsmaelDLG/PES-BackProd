@@ -2,6 +2,8 @@ package com.pesados.purplepoint.api.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +42,9 @@ class LoadDatabase {
       byte[] bdata = FileCopyUtils.copyToByteArray(inputStream);
       logger.info("Saving image in \"sample.jpg\" into DB");
 
-      return args -> {
-          logger.info("Preloading " + service.saveImage(new Image("sample.jpg","image/jpg",bdata)));
-        };
+	  return args -> {
+      logger.info("Preloading " + service.saveImage(new Image("sample.jpg","image/jpg", Base64.getEncoder().encodeToString(bdata))));
+    };
   }
 
 

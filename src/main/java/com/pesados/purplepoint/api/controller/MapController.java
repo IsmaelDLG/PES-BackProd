@@ -35,30 +35,25 @@ public class MapController {
 	@Autowired
 	private UserService userService;
 
-	  
-	// Register new user
-
-		@Operation(summary = "Add a new report",
-				description = "Adds a new report to the database with the information provided. "
-				, tags = { "reports" })
-		@ApiResponses(value = {
-				@ApiResponse(responseCode = "201", description = "Report created",
-						content = @Content(schema = @Schema(implementation = Report.class))),
-				@ApiResponse(responseCode = "400", description = "Invalid input"),
-				@ApiResponse(responseCode = "409", description = "Report already exists") })
-		@PostMapping(value = "/map", consumes = { "application/json", "application/xml" })
-		Report newReport(
-				@Parameter(description="Report to add. Cannot null or empty.",
-						required=true, schema=@Schema(implementation = Report.class))
-				@Valid @RequestBody Report newRep
-		) {
-			newRep.setUser(userService.getUserByEmail(newRep.getUser().getEmail()).orElseGet(() -> {
-					return userService.saveUser(new User(newRep.getUser().getEmail(), "Default"));
-				}));
-			return this.reportService.saveReport(newRep);
-		} 
+	// Visibilidad User
+	@Operation(summary = "Add a new report",
+			description = "Adds a new report to the database with the information provided. "
+			, tags = { "reports" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Report created",
+					content = @Content(schema = @Schema(implementation = Report.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid input"),
+			@ApiResponse(responseCode = "409", description = "Report already exists") })
+	@PostMapping(value = "/map", consumes = { "application/json", "application/xml" })
+	Report newReport(
+			@Parameter(description="Report to add. Cannot null or empty.",
+					required=true, schema=@Schema(implementation = Report.class))
+			@Valid @RequestBody Report newRep
+	) {
+		return this.reportService.saveReport(newRep);
+	} 
 		
-	  
+	// Visibilidad User
 	@Operation(summary = "Get All Reports", description = "Get ", tags = {"reports"})
 	@ApiResponses(value = {
 	          @ApiResponse(responseCode = "200", description = "successful operation",
@@ -78,6 +73,7 @@ public class MapController {
 		return reportService.getReportById(id).orElseThrow(() -> new ReportNotFoundException(id));
 	}
 	
+	// Visibilidad User
 	@Operation(summary = "Delete a Report", description = "Delete ", tags = {"reports"})
 	@ApiResponses(value = {
 	          @ApiResponse(responseCode = "200", description = "successful operation",

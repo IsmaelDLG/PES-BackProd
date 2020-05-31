@@ -1,17 +1,18 @@
 package com.pesados.purplepoint.api.model.user;
 
-import com.pesados.purplepoint.api.model.image.Image;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
-
+import com.pesados.purplepoint.api.model.image.Image;
 
 
 @Service
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Image defaultImage = new Image("sample.png","image/jpg", bdata);
+			Image defaultImage = new Image("sample.jpg","image/jpg", Base64.getEncoder().encodeToString(bdata));
 			newUser.setProfilePic(defaultImage);
 		}
 		return userRepository.save(newUser);
