@@ -3,8 +3,6 @@ package com.pesados.purplepoint.api.model.report;
 import java.util.List;
 import java.util.Optional;
 
-import com.pesados.purplepoint.api.exception.ReportNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +14,7 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public Optional<Report> getReportById(Long id) {
-		return this.reportRepository.findByReportid(id);
+		return this.reportRepository.findById(id);
 	}
 
 	@Override
@@ -26,11 +24,7 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public void deleteReportById(Long id) {
-		try {
-			this.reportRepository.deleteByReportid(id);
-		} catch (Exception e) {
-			throw new ReportNotFoundException(id);
-		}
+		this.reportRepository.deleteById(id);
 	}
 
 	@Override

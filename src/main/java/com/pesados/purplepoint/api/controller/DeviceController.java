@@ -1,6 +1,7 @@
 package com.pesados.purplepoint.api.controller;
 
 import com.pesados.purplepoint.api.exception.DeviceNotFoundException;
+import com.pesados.purplepoint.api.exception.UserNotFoundException;
 import com.pesados.purplepoint.api.model.device.Device;
 import com.pesados.purplepoint.api.model.device.DeviceService;
 import com.pesados.purplepoint.api.model.firebase.PushNotificationService;
@@ -16,6 +17,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,11 +33,9 @@ public class DeviceController {
 	
 	@Autowired
     private UserService userService;
-    
 	@Autowired
 	private PushNotificationService pushNotificationService;
 
-    // Visibilidad Device
     @Operation(summary = "Add a new device",
             description = "Adds a new device to the database with the information provided.", tags = { "devices" })
     @ApiResponses(value = {
@@ -58,7 +59,6 @@ public class DeviceController {
         }
     }
 
-    // Visibilidad Device
     @Operation(summary = "Get All devices", description = "Get all devices created.", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation",
@@ -68,7 +68,6 @@ public class DeviceController {
         return deviceService.getAll();
     }
 
-    // Visibilidad Device
     @Operation(summary = "Get a device", description = "Get ", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation",
@@ -79,7 +78,6 @@ public class DeviceController {
         return deviceService.getDeviceById(id).orElseThrow(() -> new DeviceNotFoundException(id));
     }
 
-    // Visibilidad Device
     @Operation(summary = "Delete a device", description = "Delete ", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation",
@@ -90,8 +88,8 @@ public class DeviceController {
         deviceService.deleteDeviceById(id);
     }
 
-    // Visibilidad Device
-        @Operation(summary = "Update an existing Device by token", 
+    //@PreAuthorize("hasRole('ROLE_DEVICE')")
+    @Operation(summary = "Update an existing Device by token", 
     		description = "Update the token, user and/or location given the token of an existing device.", tags = { "devices" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation"),
@@ -117,7 +115,7 @@ public class DeviceController {
 	      });
 
     }
-     // Visibilidad Device   
+    
     @Operation(summary = "Update an existing Device Location by token", 
     		description = "Update the location given the token of an existing device.", tags = { "devices" })
     @ApiResponses(value = {
@@ -137,7 +135,8 @@ public class DeviceController {
         return deviceService.saveDevice(dev);
     }
 
-    // Visibilidad Device
+
+    // Notify user of incoming help
     @Operation(summary = "Sends a notification to the user", description = "Notify the user who requested help that someone is coming.", tags = {"devices"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
@@ -156,4 +155,33 @@ public class DeviceController {
         else
             pushNotificationService.sendNotification(firebasetoken, user.getUsername());
     }
+
+    /* 
+     * REDUNTANT
+     */
+    /*
+    @Operation(summary = "Update an existing Device's token providing the old token", description = "Update the token of an existing device. If it doesn't exists, it is created.", tags = { "devices" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation"),
+            @ApiResponse(responseCode = "400", description = "Invalid username supplied"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "405", description = "Validation exception")})
+    @PutMapping(value = "/devices/updatetoken/{token}", consumes = {"application/json", "application/xml"})
+    Device updateDeviceToken(@Parameter(description = "New information for the device.", required = true)
+                                @PathVariable String token,
+                             @Parameter(description = "Token of the device to replace.", required = true)
+                                @RequestBody String oldDeviceToken
+    ) {
+        return deviceService.getDeviceByFirebaseToken(oldDeviceToken)
+                .map(device -> {
+                    device.setFirebaseToken(token);
+                    return deviceService.saveDevice(device);
+                })
+                .orElseGet(() -> {
+                    Device newDevice = new Device(token, new Location(), new User());
+                    return this.deviceService.saveDevice(newDevice);
+                });
+    }
+    */
 }
