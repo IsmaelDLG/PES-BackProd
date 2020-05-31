@@ -1,8 +1,6 @@
 package com.pesados.purplepoint.api.security;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.FilterChain;
@@ -16,14 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.pesados.purplepoint.api.PurplePointApplication;
 import com.pesados.purplepoint.api.security.firebase.FirebaseAuthenticationToken;
 import com.pesados.purplepoint.api.security.firebase.FirebaseParser;
-import com.pesados.purplepoint.api.security.firebase.FirebaseService;
 import com.pesados.purplepoint.api.security.firebase.FirebaseTokenHolder;
 
 public class FirebaseAuthorizationFilter extends OncePerRequestFilter {
@@ -53,8 +49,6 @@ public class FirebaseAuthorizationFilter extends OncePerRequestFilter {
 					logger.debug("Authenticating device");
 					String userName = holder.getUid();
 					
-					@SuppressWarnings("unchecked")
-					ArrayList<String> list = holder.getAuthorities();
 					List<GrantedAuthority> res = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_DEVICE");
 					Authentication auth = new FirebaseAuthenticationToken(userName, holder, res);
 					SecurityContextHolder.getContext().setAuthentication(auth);

@@ -52,11 +52,11 @@ public class Report {
 		this.user = usr;
 	}
 	
-	public Long getId() {
+	public Long getReportid() {
 		return this.reportid;
 	}
 	
-	public void setId(Long id) {
+	public void setReportid(Long id) {
 		this.reportid = id;
 	}
 	

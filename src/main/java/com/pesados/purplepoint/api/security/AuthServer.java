@@ -1,5 +1,7 @@
 package com.pesados.purplepoint.api.security;
 
+import com.pesados.purplepoint.api.security.firebase.FirebaseParser;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,19 +14,15 @@ public class AuthServer extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.csrf().disable()
-				//.addFilterAfter(new FirebaseAuthorizationFilter(new FirebaseParser()), UsernamePasswordAuthenticationFilter.class)
-				//.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-				.addFilterBefore(new CORSFilter(), UsernamePasswordAuthenticationFilter.class)
-				.authorizeRequests()
-                    .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll()
-			      	.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()//allow CORS option calls
-			        //.antMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
-					//.antMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
-					//.antMatchers(HttpMethod.PUT, "/api/v1/devices/**").permitAll()
-				.anyRequest().permitAll()
-				.and()
-				.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+			.csrf().disable()
+			.addFilterAfter(new FirebaseAuthorizationFilter(new FirebaseParser()), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new CORSFilter(), UsernamePasswordAuthenticationFilter.class)
+			.authorizeRequests()
+				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll()
+				.antMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
+			.anyRequest().permitAll()
+			.and()
+			.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
 	}
 
 	@Override

@@ -4,16 +4,20 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pesados.purplepoint.api.exception.ReportNotFoundException;
+import com.pesados.purplepoint.api.exception.UnauthorizedDeviceException;
+import com.pesados.purplepoint.api.exception.UnexpectedSQLError;
 import com.pesados.purplepoint.api.model.report.Report;
 import com.pesados.purplepoint.api.model.report.ReportService;
 import com.pesados.purplepoint.api.model.user.User;
@@ -34,38 +38,59 @@ public class MapController {
 	private ReportService reportService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private LoginSystem loginSystem;
 
-	  
-	// Register new user
-
-		@Operation(summary = "Add a new report",
-				description = "Adds a new report to the database with the information provided. "
-				, tags = { "reports" })
-		@ApiResponses(value = {
-				@ApiResponse(responseCode = "201", description = "Report created",
-						content = @Content(schema = @Schema(implementation = Report.class))),
-				@ApiResponse(responseCode = "400", description = "Invalid input"),
-				@ApiResponse(responseCode = "409", description = "Report already exists") })
-		@PostMapping(value = "/map", consumes = { "application/json", "application/xml" })
-		Report newReport(
-				@Parameter(description="Report to add. Cannot null or empty.",
-						required=true, schema=@Schema(implementation = Report.class))
-				@Valid @RequestBody Report newRep
-		) {
-			newRep.setUser(userService.getUserByEmail(newRep.getUser().getEmail()).orElseGet(() -> {
-					return userService.saveUser(new User(newRep.getUser().getEmail(), "Default"));
+	// Visibilidad User
+	@Operation(summary = "Add a new report",
+			description = "Adds a new report to the database with the information provided. "
+			, tags = { "reports" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Report created",
+					content = @Content(schema = @Schema(implementation = Report.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid input"),
+			@ApiResponse(responseCode = "409", description = "Report already exists") })
+	@PostMapping(value = "/map", consumes = { "application/json", "application/xml" })
+	Report newReport(
+			@RequestHeader("Authorization") String unformatedJWT,
+			@Parameter(description="Report to add. Cannot null or empty.",
+					required=true, schema=@Schema(implementation = Report.class))
+			@Valid @RequestBody Report newRep
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			int length = 6;
+			boolean useLetters = true;
+			boolean useNumbers = true;
+			String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
+			try {
+				newRep.setUser(userService.getUserByEmail(newRep.getUser().getEmail()).orElseGet(() -> {
+					return userService.saveUser(new User(newRep.getUser().getEmail(), "Default_"+generatedString));
 				}));
-			return this.reportService.saveReport(newRep);
-		} 
+				return this.reportService.saveReport(newRep);
+			} catch (Exception e) {
+				throw new UnexpectedSQLError(e.getMessage());
+			}
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
+	} 
 		
-	  
+	// Visibilidad User
 	@Operation(summary = "Get All Reports", description = "Get ", tags = {"reports"})
 	@ApiResponses(value = {
 	          @ApiResponse(responseCode = "200", description = "successful operation",
 	                  content = @Content(array = @ArraySchema(schema = @Schema(implementation = Report.class)))) })
 	@GetMapping(value = "/map", produces = { "application/json", "application/xml"})
-	List<Report> all() {
-		return reportService.getAll();
+	List<Report> all(@RequestHeader("Authorization") String unformatedJWT) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			try {
+				return reportService.getAll();
+			} catch (Exception e) {
+				throw new UnexpectedSQLError(e.getMessage());
+			}
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
 	}
 	
 	@Operation(summary = "Get a report", description = "Get ", tags = {"reports"})
@@ -73,18 +98,35 @@ public class MapController {
 	          @ApiResponse(responseCode = "200", description = "successful operation",
 	                  content = @Content(array = @ArraySchema(schema = @Schema(implementation = Report.class)))) })
 	@GetMapping(value = "/map/{id}", produces = { "application/json", "application/xml"})
-	Report getOne(
+	Report getOne(@RequestHeader("Authorization") String unformatedJWT,
 			@Parameter(description="id of the report.", required = true) @PathVariable long id) {
-		return reportService.getReportById(id).orElseThrow(() -> new ReportNotFoundException(id));
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {				
+			try {			
+				return reportService.getReportById(id).orElseThrow(() -> new ReportNotFoundException(id));
+			} catch (Exception e) {
+				throw new UnexpectedSQLError(e.getMessage());
+			}
+		} else {
+			throw new UnauthorizedDeviceException();
+		}	
 	}
 	
+	// Visibilidad User
 	@Operation(summary = "Delete a Report", description = "Delete ", tags = {"reports"})
 	@ApiResponses(value = {
 	          @ApiResponse(responseCode = "200", description = "successful operation",
 	                  content = @Content(array = @ArraySchema(schema = @Schema(implementation = Report.class)))) })
 	@DeleteMapping(value = "/map/{id}", produces = { "application/json", "application/xml"})
-	void delOne(
+	void delOne(@RequestHeader("Authorization") String unformatedJWT,
 			@Parameter(description="id of the report.", required = true) @PathVariable long id) {
-		reportService.deleteReportById(id);
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			try {
+				reportService.deleteReportById(id);
+			} catch (Exception e) {
+				throw new UnexpectedSQLError(e.getMessage());
+			}		
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
 	}
 }

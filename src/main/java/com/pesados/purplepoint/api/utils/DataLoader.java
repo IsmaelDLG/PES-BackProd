@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 
 import com.pesados.purplepoint.api.PurplePointApplication;
@@ -71,8 +70,6 @@ class LoadDatabase {
 
     @Bean
     CommandLineRunner initLocationDatabase(LocationService service) {
-        User usr = new User("test5", "test5","testingthis@gmail.com", "1234", "others");
-
         return args -> {
             logger.info("Preloading " + service.saveLocation(new Location((float)41.447612, (float)2.224417, (float)100, (float)0)));
             logger.info("Preloading " + service.saveLocation(new Location((float)41.447379, (float)2.226842, (float)100, (float)0)));

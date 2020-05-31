@@ -66,9 +66,9 @@ public class UserControllerTest {
 	@Test
 	public void shouldReturnNewUser() throws Exception {
 		JSONObject user = new JSONObject();
-		user.put("name", "amandi");
-		user.put("password", "1234");
-		user.put("email", "amandi@gmail.com");
+		user.put("name", "amandiiii");
+		user.put("password", "12346666");
+		user.put("email", "amandisdfgsdfg@gmail.com");
 		user.put("gender", "female");
 
 		this.mockMvc.perform(MockMvcRequestBuilders
@@ -85,10 +85,10 @@ public class UserControllerTest {
 		String token = TestUtils.doLogin(this.mockMvc);
 
 		this.mockMvc.perform(get("/api/v1/users/email/isma@gmail.com")
-				.header("Authorization", token)
+				.header("Authorization",token)
 				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken))
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isOk());
+				.andExpect(status().is(200));
 	}
 
 	@Test
