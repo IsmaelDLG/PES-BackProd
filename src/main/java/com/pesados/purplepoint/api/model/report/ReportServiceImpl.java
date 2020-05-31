@@ -40,6 +40,4 @@ public class ReportServiceImpl implements ReportService {
 	public Report saveReport(Report newRep) {
 		return this.reportRepository.save(newRep);
 	}
- 
-
 }
