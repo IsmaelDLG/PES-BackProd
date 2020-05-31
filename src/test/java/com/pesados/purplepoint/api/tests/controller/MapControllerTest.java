@@ -3,6 +3,7 @@ package com.pesados.purplepoint.api.tests.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,16 +34,7 @@ public class MapControllerTest {
 				.andExpect(status().isOk());
 	}
 	
-	@Test
-	public void shouldReturnOneReport() throws Exception {
-		String token = TestUtils.doLogin(this.mockMvc);
-		
-		this.mockMvc.perform(get("/api/v1/map/1").header("Authorization", token)
-				.contentType("application/json")
-				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken))
-				.andDo(print())
-				.andExpect(status().isOk());
-	}
+
 	
 	@Test
 	public void shouldCreateOneReport() throws Exception {
@@ -66,6 +58,41 @@ public class MapControllerTest {
 				.contentType("application/json")
 				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
 				.content(test.toString()))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void shouldReturnOneReport() throws Exception {
+		String token = TestUtils.doLogin(this.mockMvc);
+		
+		this.mockMvc.perform(get("/api/v1/map")
+		.header("Authorization", token)
+		.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
+		.contentType("application/json"))
+		.andDo(print())
+		.andExpect(status().isOk());
+
+		this.mockMvc.perform(get("/api/v1/map/4").header("Authorization", token)
+				.contentType("application/json")
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+	@Test
+	public void shouldDeleteOneReport() throws Exception {
+		String token = TestUtils.doLogin(this.mockMvc);
+		
+		this.mockMvc.perform(get("/api/v1/map")
+				.header("Authorization", token)
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
+				.contentType("application/json"))
+				.andDo(print())
+				.andExpect(status().isOk());
+
+		this.mockMvc.perform(delete("/api/v1/map/4").header("Authorization", token)
+				.contentType("application/json")
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken))
 				.andDo(print())
 				.andExpect(status().isOk());
 	}
