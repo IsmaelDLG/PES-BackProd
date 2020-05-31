@@ -90,7 +90,7 @@ public class MapControllerTest {
 				.andDo(print())
 				.andExpect(status().isOk());
 
-		this.mockMvc.perform(delete("/api/v1/map/4").header("Authorization", token)
+		this.mockMvc.perform(delete("/api/v1/map/2").header("Authorization", token)
 				.contentType("application/json")
 				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken))
 				.andDo(print())

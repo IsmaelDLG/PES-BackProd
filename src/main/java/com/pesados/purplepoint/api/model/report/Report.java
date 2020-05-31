@@ -22,7 +22,7 @@ public class Report {
 	
 	@Schema(description = "Id of the report.", required = true)
 	@Column(name = "reportid")
-	private @Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq") Long reportid;	
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq") private Long reportid;	
 	@Column(name = "report_desc")
 	private String description;
 	@Schema(description = "Location of the report", required = true)
