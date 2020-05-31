@@ -27,7 +27,10 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public void deleteReportById(Long id) {
 		try {
-			this.reportRepository.deleteById(id);
+			Report rep = this.reportRepository.findByReportid(id).orElseGet(null);
+			if (rep != null) {
+				this.reportRepository.delete(rep);
+			}
 		} catch (Exception e) {
 			throw new ReportNotFoundException(id);
 		}
