@@ -1,6 +1,5 @@
 package com.pesados.purplepoint.api.model.report;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,15 +21,13 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public List<Report> getAll() {
-		List<Report> result = new ArrayList<Report>();
-    	this.reportRepository.findAll().forEach(result::add);
-		return result;
+		return this.reportRepository.findAll();
 	}
 
 	@Override
 	public void deleteReportById(Long id) {
 		try {
-			this.reportRepository.deleteById(id);
+			this.reportRepository.deleteByReportid(id);
 		} catch (Exception e) {
 			throw new ReportNotFoundException(id);
 		}
@@ -40,4 +37,6 @@ public class ReportServiceImpl implements ReportService {
 	public Report saveReport(Report newRep) {
 		return this.reportRepository.save(newRep);
 	}
+ 
+
 }

@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.Base64;
 
 
+import com.pesados.purplepoint.api.model.definition.Definition;
+import com.pesados.purplepoint.api.model.definition.DefinitionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 
 import com.pesados.purplepoint.api.PurplePointApplication;
@@ -70,6 +73,8 @@ class LoadDatabase {
 
     @Bean
     CommandLineRunner initLocationDatabase(LocationService service) {
+        User usr = new User("test5", "test5","testingthis@gmail.com", "1234", "others");
+
         return args -> {
             logger.info("Preloading " + service.saveLocation(new Location((float)41.447612, (float)2.224417, (float)100, (float)0)));
             logger.info("Preloading " + service.saveLocation(new Location((float)41.447379, (float)2.226842, (float)100, (float)0)));
@@ -96,13 +101,24 @@ class LoadDatabase {
     CommandLineRunner initDeviceDatabase(DeviceService service) {
         return args -> {
             // Location "Mi Casa"
-            logger.info("Preloading " + service.saveDevice(new Device("cUp2XzhPe9MysvfL3J4f9O:APA91bFHVzjQGftg1Ae-kSibDwIWflLm73D-KpVzwJscLvnZrF8oyda9dKDGP3zI8YgroOyFpExbdakK_7bHWr7pzHpVSbtOtASm1dJzjUMcjfsoNyOkYSs5uUcVaoIVbL8qI90B6m0H", new Location((float)41.447612, (float)2.224417, 100, 0), new User())));
+            logger.info("Preloading " + service.saveDevice(new Device("f2EJYEQeYyYq-v2ubvL7x5:APA91bFam-no_lk9-kryCZol_dXDEtRjyd_iyAORuLDuLgLmyblUhYE9sYV1Prj4ohxnt6-EM_tDBVOkhnV08e2szqCGjNBRap5vnRwzBVf0iCMzlCphZiAWCkRWiDx0pB71dZEj2Ej5", new Location((float)41.447612, (float)2.224417, 100, 0), new User())));
             // Location "bar"
             logger.info("Preloading " + service.saveDevice(new Device("2", new Location((float)41.447379, (float)2.226842, (float)100, (float)0), new User())));
             // Location "china"
             logger.info("Preloading " + service.saveDevice(new Device("3", new Location((float)21.160510, (float)-86.842466, (float)100, (float)0), new User())));
             // Location "otrositio"
             logger.info("Preloading " + service.saveDevice(new Device("4", new Location((float)41.402899, (float)2.121561, (float)100, (float)0), new User())));
+        };
+    }
+
+    @Bean
+    CommandLineRunner initDefinitionDatabase(DefinitionService service) {
+
+        return args -> {
+            logger.info("Preloading " + service.saveDefinition(new Definition("Harassment", "Sexual harassment is any form of unwelcome sexual behaviour that’s offensive, humiliating or intimidating.", "Many girls are victims of sexual harassment and violence inside and outside of school.", "en")));
+            logger.info("Preloading " + service.saveDefinition(new Definition("Acoso", "El acoso sexual es cualquier forma de comportamiento sexual no deseado que es ofensivo, humillante o intimidante", "Muchas niñas son víctimas de acoso sexual y violencia dentro y fuera de la escuela.", "esp")));
+            logger.info("Preloading " + service.saveDefinition(new Definition("Violencia de genero", "La violencia de género es un tipo de violencia física o psicológica ejercida contra cualquier persona o grupo de personas sobre la base de su orientación o identidad sexual, sexo o genero que impacta de manera negativa en su identidad y bienestar social, físico, psicológico o económico.", "El 2019 termina con la cifra más alta de asesinatos por violencia de género desde 2015 en España", "esp")));
+            logger.info("Preloading " + service.saveDefinition(new Definition("Gender-based violance", "Gender-based violence is a type of physical or psychological violence against any person or group of persons on the basis of their sexual orientation or identity, sex or gender that negatively impacts on their social, physical, psychological or economic identity and well-being.", "2019 ends with the highest number of gender-based violence murders since 2015 in Spain", "en")));
         };
     }
 }

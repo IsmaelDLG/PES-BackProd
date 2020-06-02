@@ -21,8 +21,10 @@ public class Report {
 	
 	
 	@Schema(description = "Id of the report.", required = true)
+	@Id
 	@Column(name = "reportid")
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq") private Long reportid;	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long reportid;	
 	@Column(name = "report_desc")
 	private String description;
 	@Schema(description = "Location of the report", required = true)
@@ -49,7 +51,7 @@ public class Report {
 		this.location = loc;
 		this.user = usr;
 	}
-
+	
 	public Long getId() {
 		return this.reportid;
 	}
@@ -57,7 +59,7 @@ public class Report {
 	public void setId(Long id) {
 		this.reportid = id;
 	}
-
+	
 	public User getUser() {
 		return this.user;
 	}

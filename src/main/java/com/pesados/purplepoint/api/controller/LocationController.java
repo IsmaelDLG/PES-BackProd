@@ -11,6 +11,6 @@ public class LocationController {
         float kx = (float) (Math.cos(Math.PI * actualLatitude / 180.0) * ky);
         float dx = Math.abs(actualLongitude - longitude) * kx;
         float dy = Math.abs(actualLatitude - latitude) * ky;
-        return Math.sqrt(dx * dx + dy * dy) <= 0.5;
+        return Math.sqrt(dx * dx + dy * dy) <= 100.0;
     }
 }

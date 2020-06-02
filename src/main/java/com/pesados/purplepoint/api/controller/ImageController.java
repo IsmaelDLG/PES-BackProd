@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pesados.purplepoint.api.PurplePointApplication;
 import com.pesados.purplepoint.api.exception.ImageNotFoundException;
 import com.pesados.purplepoint.api.exception.UnauthorizedDeviceException;
 import com.pesados.purplepoint.api.model.image.Image;
@@ -33,6 +36,8 @@ public class ImageController {
 	
 	private final ImageService imgService;
 	private final LoginSystem loginSystem;
+	private static final Logger logger = LoggerFactory.getLogger(PurplePointApplication.class);
+
 	  
 	public ImageController(ImageService imgService, LoginSystem  loginSystem) {
 		this.imgService = imgService;
