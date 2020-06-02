@@ -13,17 +13,17 @@ public class Device {
     private @Id @GeneratedValue Long deviceId;
 
     @Schema(description = "Firebase token.", required = true)
-	@Column(unique = true)
+    @Column(unique = true)
     private String firebaseToken;
 
     @Schema(description = "Location of the device.", required = true)
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="location")
+    @JoinColumn(name="locationId")
     private Location location;
 
     @Schema(description = "Last active user.", required = true)
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="user")
+    @JoinColumn(name="id")
     private User user;
 
     public Device() {}

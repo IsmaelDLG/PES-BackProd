@@ -21,7 +21,7 @@ public class User {
 	@Schema(description = "Email of the user.", example = "ohamadoslideres@gmail.com", required = true)
 	@Column(unique = true)
 
-  private String email;
+	private String email;
 	@Schema(description = "Password of the user.", required = true)
 	private String password;
 	@Schema(description = "Gender of the user.", required = true)
@@ -35,7 +35,7 @@ public class User {
 	private int markedSpots;
 	@Schema(description = "The profile picture of the User", required = false)
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "imageid") 
+	@JoinColumn(name = "imageid")
 	private Image profilePic;
 
 	public User() {}
@@ -63,11 +63,11 @@ public class User {
 		this.markedSpots = 0;
 		this.profilePic = null;
 	}
-	
+
 	public Long getID() {
-		return id; 
+		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -75,7 +75,7 @@ public class User {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -87,7 +87,7 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -95,15 +95,15 @@ public class User {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	
-	public String getGender() {  
-		return gender; 
+
+	public String getGender() {
+		return gender;
 	}
 
 	public int getHelpedUsers() {
 		return helpedUsers;
 	}
-	
+
 	public void setHelpedUsers(int helpedUsers) {
 		this.helpedUsers = helpedUsers;
 	}
@@ -111,7 +111,7 @@ public class User {
 	public int getMarkedSpots() {
 		return markedSpots;
 	}
-	
+
 	public void setMarkedSpots(int markedSpots) {
 		this.markedSpots = markedSpots;
 	}
@@ -119,7 +119,7 @@ public class User {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
+
 	public String getToken() {
 		return token;
 	}
@@ -127,7 +127,7 @@ public class User {
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}

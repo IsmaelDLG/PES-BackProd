@@ -10,16 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.pesados.purplepoint.api.controller.AlarmController;
-import com.pesados.purplepoint.api.controller.LoginSystem;
-import com.pesados.purplepoint.api.model.alarm.Alarm;
-import com.pesados.purplepoint.api.model.alarm.AlarmService;
-import com.pesados.purplepoint.api.model.device.Device;
-import com.pesados.purplepoint.api.model.device.DeviceService;
-import com.pesados.purplepoint.api.model.firebase.PushNotificationService;
-import com.pesados.purplepoint.api.model.location.Location;
-import com.pesados.purplepoint.api.tests.utils.TestUtils;
-
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -28,7 +18,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import com.pesados.purplepoint.api.controller.AlarmController;
+import com.pesados.purplepoint.api.controller.LoginSystem;
+import com.pesados.purplepoint.api.model.alarm.Alarm;
+import com.pesados.purplepoint.api.model.alarm.AlarmService;
+import com.pesados.purplepoint.api.model.device.Device;
+import com.pesados.purplepoint.api.model.device.DeviceService;
+import com.pesados.purplepoint.api.model.firebase.PushNotificationService;
+import com.pesados.purplepoint.api.model.location.Location;
+import com.pesados.purplepoint.api.model.user.User;
+import com.pesados.purplepoint.api.tests.utils.TestUtils;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -215,8 +217,12 @@ public class AlarmControllerTest {
 	// integration and findNearbyDevices (AlarmController) test
 	@Test
 	public void shouldReturnNearbyDevices() throws Exception {
+		Location miCasa = new Location((float)41.447612, (float)2.224417, 100, 0);
 		Location bar = new Location((float)41.447379, (float)2.226842, 100, 0);
+		Location cancun = new Location((float)21.160510, (float)-86.842466, 100, 0);
+		Location sarria = new Location((float)41.402899, (float)2.121561, 100, 0);
 
+		User testUser = new User();
 		Alarm stubAlarm = new Alarm("isma", "2", bar);
 
 		List<Device> expectedResult = new ArrayList<Device>();
