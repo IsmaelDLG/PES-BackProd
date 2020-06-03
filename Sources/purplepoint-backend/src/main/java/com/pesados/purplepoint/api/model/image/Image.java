@@ -30,6 +30,7 @@ public class Image {
 	private String imgname;	
 	@Schema(description = "Type of the image.", required = false)
     @Column(name = "type")
+
 	private String type;
 	@Schema(description = "Image bytes.", required = true)
 	@Column(name = "picByteB64")

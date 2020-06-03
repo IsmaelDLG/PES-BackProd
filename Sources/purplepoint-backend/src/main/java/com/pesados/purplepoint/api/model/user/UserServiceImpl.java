@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User saveUser(User newUser) {
 		if (newUser.getProfilePic() == null) {
-			Resource resource = new ClassPathResource("sample.jpg");
+			Resource resource = new ClassPathResource("sample.svg");
 		    InputStream inputStream;
 		    byte[] bdata = null;
 			try {
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Image defaultImage = new Image("sample.jpg","image/jpg", Base64.getEncoder().encodeToString(bdata));
+			Image defaultImage = new Image("sample.svg","image/svg", Base64.getEncoder().encodeToString(bdata));
 			newUser.setProfilePic(defaultImage);
 		}
 		return userRepository.save(newUser);
