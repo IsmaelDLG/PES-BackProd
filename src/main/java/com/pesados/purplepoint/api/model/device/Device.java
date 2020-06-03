@@ -13,7 +13,7 @@ public class Device {
     private @Id @GeneratedValue Long deviceId;
 
     @Schema(description = "Firebase token.", required = true)
-    @Column(unique = true)
+	@Column(unique = true)
     private String firebaseToken;
 
     @Schema(description = "Location of the device.", required = true)

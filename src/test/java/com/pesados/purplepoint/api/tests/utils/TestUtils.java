@@ -18,7 +18,7 @@ public class TestUtils {
 	public static String firebaseHeaderName = "X-Authorization-Firebase";
 	
 	// My be done using this @Value("${firebase.debugToken}")
-	public static String firebaseToken = "f2EJYEQeYyYq-v2ubvL7x5:APA91bFam-no_lk9-kryCZol_dXDEtRjyd_iyAORuLDuLgLmyblUhYE9sYV1Prj4ohxnt6-EM_tDBVOkhnV08e2szqCGjNBRap5vnRwzBVf0iCMzlCphZiAWCkRWiDx0pB71dZEj2Ej5";
+	public static String firebaseToken = "cUp2XzhPe9MysvfL3J4f9O:APA91bFHVzjQGftg1Ae-kSibDwIWflLm73D-KpVzwJscLvnZrF8oyda9dKDGP3zI8YgroOyFpExbdakK_7bHWr7pzHpVSbtOtASm1dJzjUMcjfsoNyOkYSs5uUcVaoIVbL8qI90B6m0H";
 	
 	@Test
 	static public String doLogin(MockMvc mockMvc) throws Exception {

@@ -1,20 +1,18 @@
 package com.pesados.purplepoint.api.model.user;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 
-import com.pesados.purplepoint.api.model.image.Image;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
 
-
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 	
@@ -37,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User saveUser(User newUser) {
 		if (newUser.getProfilePic() == null) {
-			Resource resource = new ClassPathResource("sample.jpg");
+			Resource resource = new ClassPathResource("sample.svg");
 		    InputStream inputStream;
 		    byte[] bdata = null;
 			try {
@@ -46,8 +44,9 @@ public class UserServiceImpl implements UserService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Image defaultImage = new Image("sample.jpg","image/jpg", Base64.getEncoder().encodeToString(bdata));
-			newUser.setProfilePic(defaultImage);
+			// Comentado porque guardar imagenes tan grandes no es compatible con la BD.
+			/*Image defaultImage = new Image("sample.svg","image/svg", Base64.getEncoder().encodeToString(bdata));
+			newUser.setProfilePic(defaultImage);*/
 		}
 		return userRepository.save(newUser);
 	}

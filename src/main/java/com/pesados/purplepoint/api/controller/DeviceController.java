@@ -6,7 +6,6 @@ import com.pesados.purplepoint.api.model.device.DeviceService;
 import com.pesados.purplepoint.api.model.firebase.PushNotificationService;
 import com.pesados.purplepoint.api.model.location.Location;
 import com.pesados.purplepoint.api.model.user.User;
-import com.pesados.purplepoint.api.model.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -27,12 +26,9 @@ public class DeviceController {
 
 	@Autowired
     private DeviceService deviceService;
-	
-	@Autowired
-    private UserService userService;
     
-	@Autowired
-	private PushNotificationService pushNotificationService;
+    @Autowired
+    private PushNotificationService pushNotificationService;
 
     // Visibilidad Device
     @Operation(summary = "Add a new device",

@@ -3,9 +3,12 @@ package com.pesados.purplepoint.api.controller;
 import com.pesados.purplepoint.api.model.user.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import com.pesados.purplepoint.api.exception.UserNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 import java.util.List;
@@ -16,10 +19,12 @@ public class LoginSystem {
 
     private final UserService userService;
 
+	@Autowired
     public LoginSystem (UserService usrService) {
         this.userService = usrService;
     }
 
+    @Transactional
     public boolean checkLoggedIn(String unformatedJWT) {
         try {
             this.userService.getUserByToken(unformatedJWT).orElseThrow(() -> new UserNotFoundException(unformatedJWT));
@@ -29,6 +34,7 @@ public class LoginSystem {
         }	
     }
 
+    @Transactional
     public String getJWTToken(String email) {
 		String secretKey = "adivinaestacrack";
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils

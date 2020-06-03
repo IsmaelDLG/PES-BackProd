@@ -1,8 +1,11 @@
 package com.pesados.purplepoint.api.model.image;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public interface ImageService {
 
 

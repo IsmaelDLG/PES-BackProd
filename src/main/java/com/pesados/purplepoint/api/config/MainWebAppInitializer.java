@@ -16,7 +16,6 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
      
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
-		// TODO Auto-generated method stub
 		ServletRegistration.Dynamic appServlet = servletContext.addServlet("mvc", new DispatcherServlet(
 		          new GenericWebApplicationContext()));
 		 

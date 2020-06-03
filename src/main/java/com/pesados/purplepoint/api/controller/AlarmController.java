@@ -108,7 +108,7 @@ public class AlarmController {
 					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Alarm.class))))})
 	@GetMapping(value = "/alarms", produces = {"application/json", "application/xml"})
 	List<Alarm> all(
-		@RequestHeader("Authorization") String unformatedJWT
+		@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT
 	) {
 		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
 			return alarmService.getAll();
@@ -124,9 +124,9 @@ public class AlarmController {
 					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Alarm.class))))})
 	@GetMapping(value = "/alarms/{id}", produces = {"application/json", "application/xml"})
 	Alarm getbyId(
-		@RequestHeader("Authorization") String unformatedJWT,
-		@Parameter(description = "ID of the contact to search.", required = true)
-		@PathVariable long id) {
+		@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+		@Parameter(description = "ID of the contact to search.", required = true) @PathVariable long id
+	) {
 		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
 			return alarmService.getAlarmById(id).orElseThrow(() -> new AlarmNotFoundException(id));
 		} else {
@@ -141,9 +141,9 @@ public class AlarmController {
 					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Alarm.class))))})
 	@GetMapping(value = "/alarms/username/{username}", produces = {"application/json", "application/xml"})
 	Alarm getbyUsername(
-		@RequestHeader("Authorization") String unformatedJWT,
-		@Parameter(description = "username of the person who pressed the panic button.", required = true)
-		@PathVariable String username){
+		@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+		@Parameter(description = "username of the person who pressed the panic button.", required = true) @PathVariable String username
+	){
 		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
 			return alarmService.getAlarmByUsername(username).orElseThrow(() -> new AlarmNotFoundException(username));
 		} else {

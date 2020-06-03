@@ -25,10 +25,11 @@ public class UserControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-/*
+
+	/*
     @Test
     public void shouldReturnUnauthorized() throws Exception {
-    	this.mockMvc.perform(get("/api/v1/users")).andExpect(status().isUnauthorized());
+    	this.mockMvc.perform(get("/api/v1/users")).andExpect(status().isInternalServerError());
     }
 */
     @Test
@@ -53,10 +54,11 @@ public class UserControllerTest {
     	
     	String token = TestUtils.doLogin(this.mockMvc);
 
-    	this.mockMvc.perform(put("/api/v1/users/refresh").header("Authorization", token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
-				.content(""))
+		this.mockMvc.perform(put("/api/v1/users/refresh")
+			.header("Authorization", token)
+			.contentType(MediaType.APPLICATION_JSON)
+			.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
+			.content("{}"))
     				.andDo(MockMvcResultHandlers.print())
 	    				.andExpect(status().is(200));
 
@@ -93,13 +95,7 @@ public class UserControllerTest {
 
 	@Test
 	public void shouldReturnUserinfo() throws Exception {
-/*
- * tret del test perque falla amb cada nova feature y me tiene arto
- * amandi: isma eres el amo
-		String user_bd = "{\"id\":1,\"name\":\"test\",\"username\":\"test1\",\"email\":\"isma@gmail.com\",\"password\":\"1234\",\"gender\":\"others\",\"token\":\"" + 
-			token +
-			"\",\"helpedUsers\":0,\"markedSpots\":0}";
-*/
+
 		String token = TestUtils.doLogin(this.mockMvc);
 		this.mockMvc.perform(get("/api/v1/users/1")
 				.header("Authorization",token)
