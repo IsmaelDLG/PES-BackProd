@@ -18,7 +18,7 @@ import java.util.Date;
 @Table(name = "Image")
 public class Image {
 	
-	public static String defaultUrl = "https://image.flaticon.com/icons/svg/1738/1738691.svg";
+	public static String defaultUrl = "";
 	
 	@Schema(description = "Id of the image.", required = true)
 	@Id

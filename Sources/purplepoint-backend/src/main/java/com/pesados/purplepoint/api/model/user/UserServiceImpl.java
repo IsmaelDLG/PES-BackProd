@@ -1,6 +1,5 @@
 package com.pesados.purplepoint.api.model.user;
 
-import com.pesados.purplepoint.api.model.image.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -10,7 +9,6 @@ import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,8 +44,9 @@ public class UserServiceImpl implements UserService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Image defaultImage = new Image("sample.svg","image/svg", Base64.getEncoder().encodeToString(bdata));
-			newUser.setProfilePic(defaultImage);
+			// Comentado porque guardar imagenes tan grandes no es compatible con la BD.
+			/*Image defaultImage = new Image("sample.svg","image/svg", Base64.getEncoder().encodeToString(bdata));
+			newUser.setProfilePic(defaultImage);*/
 		}
 		return userRepository.save(newUser);
 	}
