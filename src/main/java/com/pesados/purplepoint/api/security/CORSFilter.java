@@ -28,7 +28,7 @@ public class CORSFilter implements Filter {
         } else {
             httpResp.setHeader("Access-Control-Allow-Headers", "");
             // This is a cross-domain request, add headers allowing access
-            httpResp.setHeader("Access-Control-Allow-Origin", origin);
+            httpResp.setHeader("Access-Control-Allow-Origin", "*");
             httpResp.setHeader("Access-Control-Allow-Methods", VALID_METHODS);
             httpResp.setHeader("Access-Control-Allow-Credentials", "true");
             String headers = httpReq.getHeader("Access-Control-Request-Headers");
