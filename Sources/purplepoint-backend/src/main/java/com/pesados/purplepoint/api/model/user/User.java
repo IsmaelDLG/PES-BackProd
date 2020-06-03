@@ -3,15 +3,14 @@ package com.pesados.purplepoint.api.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pesados.purplepoint.api.model.image.Image;
 import com.pesados.purplepoint.api.model.report.Report;
-
-import org.apache.commons.lang3.RandomStringUtils;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.util.Set;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.util.Set;
 
+@Transactional
 @Entity
 @Table(name = "Users")
 public class User {

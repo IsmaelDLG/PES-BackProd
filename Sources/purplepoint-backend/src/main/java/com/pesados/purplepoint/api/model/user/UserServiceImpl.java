@@ -1,20 +1,20 @@
 package com.pesados.purplepoint.api.model.user;
 
+import com.pesados.purplepoint.api.model.image.Image;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-
-import com.pesados.purplepoint.api.model.image.Image;
-
-
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 	

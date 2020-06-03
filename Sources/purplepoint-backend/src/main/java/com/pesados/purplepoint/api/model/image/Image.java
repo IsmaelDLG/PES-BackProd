@@ -2,6 +2,7 @@ package com.pesados.purplepoint.api.model.image;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import net.bytebuddy.utility.RandomString;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.Date;
 
+@Transactional
 @Entity
 @Table(name = "Image")
 public class Image {
