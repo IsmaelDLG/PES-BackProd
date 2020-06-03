@@ -17,7 +17,7 @@ public class CORSFilter implements Filter {
         HttpServletResponse httpResp = (HttpServletResponse) resp;
 
         // No Origin header present means this is not a cross-domain request
-        String origin = httpReq.getHeader("Origin");
+        String origin = httpReq.getHeader("Referer");
         if (origin == null) {
             // Return standard response if OPTIONS request w/o Origin header
             if ("OPTIONS".equalsIgnoreCase(httpReq.getMethod())) {
@@ -35,7 +35,6 @@ public class CORSFilter implements Filter {
             headers = headers + ", x-requested-with";
             if (headers != null)
                 httpResp.setHeader("Access-Control-Allow-Headers", headers);
-            
             // Allow caching cross-domain permission
             httpResp.setHeader("Access-Control-Max-Age", "3600");
         }
@@ -43,6 +42,5 @@ public class CORSFilter implements Filter {
         if (!"OPTIONS".equalsIgnoreCase(httpReq.getMethod())) {
             chain.doFilter(req, resp);
         }
-
     }
 }
