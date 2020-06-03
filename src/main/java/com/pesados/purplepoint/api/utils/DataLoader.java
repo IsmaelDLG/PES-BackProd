@@ -108,7 +108,7 @@ class LoadDatabase {
 			logger.info("Preloading " + service.saveDevice(new Device("4", new Location((float)41.402899, (float)2.121561, (float)100, (float)0), new User())));
 		};
 	}
-	*/
+
     @Bean
     CommandLineRunner initDeviceDatabase(DeviceService service) {
         return args -> {
@@ -133,5 +133,6 @@ class LoadDatabase {
             logger.info("Preloading " + service.saveDefinition(new Definition("Gender-based violance", "Gender-based violence is a type of physical or psychological violence against any person or group of persons on the basis of their sexual orientation or identity, sex or gender that negatively impacts on their social, physical, psychological or economic identity and well-being.", "2019 ends with the highest number of gender-based violence murders since 2015 in Spain", "en")));
         };
     }
->>>>>>> aeeb9cf8647cb7f584c9c0d206c1cd9c5e020623
+    
+ */
 }
