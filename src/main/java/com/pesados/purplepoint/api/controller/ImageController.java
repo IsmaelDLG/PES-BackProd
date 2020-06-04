@@ -104,7 +104,7 @@ public class ImageController {
 		if ( x > y ) {
 			croppedImage = bImage.getSubimage((x-y)/2, 0, y, y);
 		} else {
-			croppedImage = bImage.getSubimage((y-x)/2, 0, x, x);
+			croppedImage = bImage.getSubimage(0, (y-x)/2, x, x);
 		}
 
 		java.awt.Image img = croppedImage.getScaledInstance(125, 125, java.awt.image.BufferedImage.SCALE_DEFAULT);
