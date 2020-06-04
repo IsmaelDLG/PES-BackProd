@@ -300,6 +300,12 @@ public class UserController {
 		}
 	}
 
+	@Operation(summary = "Increase MarkedSpot", description = "Increased marked user spots", tags = {"users"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation"),
+			@ApiResponse(responseCode = "404", description = "User not found"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized")
+	})
 	@PutMapping(path = "/users/increaseMarkedSpots/{userEmail}")
 	User increaseMarkedSpots(
 			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
@@ -317,6 +323,12 @@ public class UserController {
 		}
 	}
 
+	@Operation(summary = "Decrease MarkedSpot", description = "Decrease marked user spots", tags = {"users"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation"),
+			@ApiResponse(responseCode = "404", description = "User not found"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized")
+	})
 	@PutMapping(path = "/users/decreaseMarkedSpots/{userEmail}")
 	User decreaseMarkedSpots(
 			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
