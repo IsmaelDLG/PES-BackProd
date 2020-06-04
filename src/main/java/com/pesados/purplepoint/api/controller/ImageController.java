@@ -1,8 +1,13 @@
 package com.pesados.purplepoint.api.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -77,12 +83,37 @@ public class ImageController {
 	Image parsePic(
 		@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
 		@Parameter(description="New pic", required = true) @RequestParam("file") MultipartFile file) throws IOException {
+
 		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
-			return new Image(file.getName(), file.getContentType(), Base64.getEncoder().encodeToString(file.getBytes()));
+			return new Image(file.getName(), file.getContentType(), Base64.getEncoder().encodeToString(this.cropAndScale(file)));
 		} else {
 			throw new UnauthorizedDeviceException();
 		}
-	}  
+	} 
+
+	private byte[] cropAndScale(MultipartFile file) throws IOException {
+		BufferedImage bImage = null;
+		InputStream in = new ByteArrayInputStream(file.getBytes());
+		bImage = ImageIO.read(in);
+
+		
+		int x = bImage.getWidth();
+		int y = bImage.getHeight();
+		BufferedImage croppedImage = null;
+		if ( x > y ) {
+			croppedImage = bImage.getSubimage((x-y)/2, 0, y, y);
+		} else {
+			croppedImage = bImage.getSubimage((y-x)/2, 0, x, x);
+		}
+
+		BufferedImage scaledImage = (BufferedImage) croppedImage.getScaledInstance(125, 125, java.awt.image.BufferedImage.SCALE_DEFAULT);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ImageIO.write( scaledImage, file.getContentType().substring(file.getContentType().indexOf("/")+1), bos );
+		bos.flush();
+		byte[] ret = bos.toByteArray();
+		bos.close();
+		return ret;
+	}
 
 	// Visibilidad User
 	@Operation(summary = "Get All Images", description = "Get ", tags = {"images"})

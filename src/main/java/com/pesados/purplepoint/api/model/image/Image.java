@@ -30,8 +30,8 @@ public class Image {
 	private String imgname;	
 	@Schema(description = "Type of the image.", required = false)
     @Column(name = "type")
-
 	private String type;
+
 	@Schema(description = "Image bytes.", required = true)
 	@Column(name = "picByteB64")
 	private String picByteB64;
@@ -57,7 +57,6 @@ public class Image {
 		}
 		return name;
 	}
-	
 	
 	public Image(String name, String type, String picByteB64) {
 		// Ho fem una mica antibalas

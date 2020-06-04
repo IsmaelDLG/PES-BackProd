@@ -96,6 +96,7 @@ public class UserController {
 					content = @Content(schema = @Schema(implementation = User.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid input"),
 			@ApiResponse(responseCode = "409", description = "User already exists")})
+	
 	@PostMapping(value = "/users/register", consumes = {"application/json", "application/xml"})
 	User newUser(
 			@Parameter(description = "User to add. Cannot null or empty.",

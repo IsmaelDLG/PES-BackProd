@@ -33,7 +33,7 @@ public class FAQController {
 	@GetMapping(value = "/wiki/faqs/{lang}", produces = { "application/json", "application/xml"})
 	List<Question> all(
 			@Parameter(description = "Language of the desired definitions. Must be esp or en", required = true)
-			@RequestParam String lang) {
+			@Valid @PathVariable String lang) {
 
 		return faqService.getQuestionByLanguage(lang);
 	}
