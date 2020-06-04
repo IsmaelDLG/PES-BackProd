@@ -300,5 +300,39 @@ public class UserController {
 		}
 	}
 
+	@PutMapping(path = "/users/increaseMarkedSpots/{userEmail}")
+	User increaseMarkedSpots(
+			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+			@Parameter(description = "Information for the user who has helped.", required = true)
+			@PathVariable String userEmail
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return userService.getUserByEmail(userEmail)
+					.map(user -> {
+						user.setMarkedSpots(user.getMarkedSpots()+1);
+						return userService.saveUser(user);
+					}).orElseThrow(() -> new UserNotFoundException(userEmail));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
+	}
+
+	@PutMapping(path = "/users/decreaseMarkedSpots/{userEmail}")
+	User decreaseMarkedSpots(
+			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+			@Parameter(description = "Information for the user who has helped.", required = true)
+			@PathVariable String userEmail
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return userService.getUserByEmail(userEmail)
+					.map(user -> {
+						user.setMarkedSpots(user.getMarkedSpots()-1);
+						return userService.saveUser(user);
+					}).orElseThrow(() -> new UserNotFoundException(userEmail));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
+	}
+
 
 }

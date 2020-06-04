@@ -23,11 +23,11 @@ public class DefinitionControllerTest {
 	@Test
 	public void shouldCreateOneDefinition() throws Exception {
 		String token = TestUtils.doLogin(this.mockMvc);
-
-
+		
 		JSONObject def = new JSONObject();
 		def.put("word", "Franco");
 		def.put("definition", "best backen developer in da world");
+		def.put("kind","noun" );
 		def.put("example", "Franco makes test");
 		def.put("language", "en");
 
@@ -39,7 +39,6 @@ public class DefinitionControllerTest {
 				.andDo(print())
 				.andExpect(status().isOk());
 	}
-
 
 	@Test
 	public void shouldReturnAllReports() throws Exception {
@@ -53,7 +52,5 @@ public class DefinitionControllerTest {
 				.andDo(print())
 				.andExpect(status().isOk());
 	}
-
-
 
 }

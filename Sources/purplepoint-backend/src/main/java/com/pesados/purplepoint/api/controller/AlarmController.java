@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +74,8 @@ public class AlarmController {
 		List<String> registrationTokens = new ArrayList<>();
 
 		for (int i = 0; i < devices.size(); ++i) {
+			System.out.println("Sending to: ");
+			System.out.println(devices.get(i).getFirebaseToken());
 			registrationTokens.add(devices.get(i).getFirebaseToken());
 		}
 
@@ -94,9 +97,15 @@ public class AlarmController {
 			float deviceLatitude = allDevices.get(i).getLocation().getLatitude();
 			float deviceLongitude = allDevices.get(i).getLocation().getLongitude();
 			String deviceToken = allDevices.get(i).getFirebaseToken();
+			System.out.println("el token es" +allDevices.get(i).getFirebaseToken());
 
-			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken))
-			result.add(allDevices.get(i));
+
+			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken)){
+				System.out.println("el usurio valido del device es" +allDevices.get(i).getUser().getUsername());
+				System.out.println("el token es" +allDevices.get(i).getFirebaseToken());
+				result.add(allDevices.get(i));
+			}
+
 		}
 		return result;
 	}

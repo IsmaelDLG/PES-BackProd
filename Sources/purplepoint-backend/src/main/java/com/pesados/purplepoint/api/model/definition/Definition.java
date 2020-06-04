@@ -24,15 +24,19 @@ public class Definition {
 			"sexual harassment and violence inside and outside of school.", required = true)
 	@Column(name = "example", length = 2500)
 	private String example;
+
+	@Schema(description = "Word kind", example="verb, noun, adjective", required = true)
+	private String kind;
 	@Schema(description = "Language of the definition.", example="ESP", required = true)
 	private String language;
 
 	public Definition(){}
 
-	public Definition(String word, String definition, String example, String language) {
+	public Definition(String word, String definition, String example, String kind, String language) {
 		this.word = word;
 		this.definition = definition;
 		this.example = example;
+		this.kind = kind;
 		this.language = language;
 	}
 
@@ -74,5 +78,13 @@ public class Definition {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
 	}
 }

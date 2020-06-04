@@ -55,7 +55,7 @@ public class DefinitionController {
 	@Operation(summary = "Get All Definition by Language", description = "Get definitions by the given language ", tags = {"definition"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful operation",
-					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Report.class)))) })
+					content = @Content(array = @ArraySchema(schema = @Schema(implementation = Definition.class)))) })
 	@GetMapping(value = "/definitions", produces = { "application/json", "application/xml"})
 	List<Definition> all(
 			@Parameter(description = "Language of the desired definitions. Must be ESP or EN", required = true)
