@@ -1,6 +1,5 @@
 package com.pesados.purplepoint.api.tests.controller;
 
-import com.pesados.purplepoint.api.controller.LoginSystem;
 import com.pesados.purplepoint.api.tests.utils.TestUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -21,9 +20,6 @@ public class FAQControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private LoginSystem loginSystem;
 
     @Test
     public void shouldReturnNewQuestion() throws Exception {
@@ -53,13 +49,14 @@ public class FAQControllerTest {
 
         String token = TestUtils.doLogin(this.mockMvc);
 
-        MvcResult responsecreate = this.mockMvc.perform(post("/api/v1/wiki/faqs/create").header("Authorization", token)
-                .contentType("application/json")
-                .header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
-                .content(question.toString()))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult responsecreate = this.mockMvc.perform(post("/api/v1/wiki/faqs/create")
+            .header("Authorization", token)
+            .contentType("application/json")
+            .header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
+            .content(question.toString()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
 
         JSONObject respcreate = new JSONObject(responsecreate.getResponse().getContentAsString());
         String id = Integer.toString((int) respcreate.get("questionId"));

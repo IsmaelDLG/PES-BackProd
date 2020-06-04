@@ -96,6 +96,7 @@ public class UserController {
 					content = @Content(schema = @Schema(implementation = User.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid input"),
 			@ApiResponse(responseCode = "409", description = "User already exists")})
+	
 	@PostMapping(value = "/users/register", consumes = {"application/json", "application/xml"})
 	User newUser(
 			@Parameter(description = "User to add. Cannot null or empty.",
@@ -293,6 +294,52 @@ public class UserController {
 					user.setHelpedUsers(user.getHelpedUsers()+1);
 					return userService.saveUser(user);
 				}).orElseThrow(() -> new UserNotFoundException(userEmail));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
+	}
+
+	@Operation(summary = "Increase MarkedSpot", description = "Increased marked user spots", tags = {"users"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation"),
+			@ApiResponse(responseCode = "404", description = "User not found"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized")
+	})
+	@PutMapping(path = "/users/increaseMarkedSpots/{userEmail}")
+	User increaseMarkedSpots(
+			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+			@Parameter(description = "Email of the user", required = true)
+			@PathVariable String userEmail
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return userService.getUserByEmail(userEmail)
+					.map(user -> {
+						user.setMarkedSpots(user.getMarkedSpots()+1);
+						return userService.saveUser(user);
+					}).orElseThrow(() -> new UserNotFoundException(userEmail));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
+	}
+
+	@Operation(summary = "Decrease MarkedSpot", description = "Decrease marked user spots", tags = {"users"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation"),
+			@ApiResponse(responseCode = "404", description = "User not found"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized")
+	})
+	@PutMapping(path = "/users/decreaseMarkedSpots/{userEmail}")
+	User decreaseMarkedSpots(
+			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+			@Parameter(description = "Email of the user", required = true)
+			@PathVariable String userEmail
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return userService.getUserByEmail(userEmail)
+					.map(user -> {
+						user.setMarkedSpots(user.getMarkedSpots()-1);
+						return userService.saveUser(user);
+					}).orElseThrow(() -> new UserNotFoundException(userEmail));
 		} else {
 			throw new UnauthorizedDeviceException();
 		}
