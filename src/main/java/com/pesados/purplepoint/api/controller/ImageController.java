@@ -1,5 +1,6 @@
 package com.pesados.purplepoint.api.controller;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -106,9 +107,18 @@ public class ImageController {
 			croppedImage = bImage.getSubimage((y-x)/2, 0, x, x);
 		}
 
-		BufferedImage scaledImage = (BufferedImage) croppedImage.getScaledInstance(125, 125, java.awt.image.BufferedImage.SCALE_DEFAULT);
+		java.awt.Image img = croppedImage.getScaledInstance(125, 125, java.awt.image.BufferedImage.SCALE_DEFAULT);
+
+		// Create a buffered image with transparency
+		bImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		// Draw the image on to the buffered image
+		Graphics2D bGr = bImage.createGraphics();
+		bGr.drawImage(img, 0, 0, null);
+		bGr.dispose();
+		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ImageIO.write( scaledImage, file.getContentType().substring(file.getContentType().indexOf("/")+1), bos );
+		ImageIO.write( bImage, file.getContentType().substring(file.getContentType().indexOf("/")+1), bos );
 		bos.flush();
 		byte[] ret = bos.toByteArray();
 		bos.close();
