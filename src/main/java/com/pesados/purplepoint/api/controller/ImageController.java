@@ -86,15 +86,18 @@ public class ImageController {
 		@Parameter(description="New pic", required = true) @RequestParam("file") MultipartFile file) throws IOException {
 
 		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
-			return new Image(file.getName(), file.getContentType(), Base64.getEncoder().encodeToString(this.cropAndScale(file)));
+			return new Image(
+				file.getName(), 
+				file.getContentType(), 
+				Base64.getEncoder().encodeToString(ImageController.cropAndScale(file.getContentType(), file.getBytes())));
 		} else {
 			throw new UnauthorizedDeviceException();
 		}
 	} 
 
-	private byte[] cropAndScale(MultipartFile file) throws IOException {
+	public static byte[] cropAndScale(String type, byte[] file) throws IOException {
 		BufferedImage bImage = null;
-		InputStream in = new ByteArrayInputStream(file.getBytes());
+		InputStream in = new ByteArrayInputStream(file);
 		bImage = ImageIO.read(in);
 
 		
@@ -118,7 +121,7 @@ public class ImageController {
 		bGr.dispose();
 		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ImageIO.write( bImage, file.getContentType().substring(file.getContentType().indexOf("/")+1), bos );
+		ImageIO.write( bImage, type.substring(type.indexOf("/")+1), bos );
 		bos.flush();
 		byte[] ret = bos.toByteArray();
 		bos.close();
