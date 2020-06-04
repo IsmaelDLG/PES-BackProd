@@ -1,31 +1,17 @@
 package com.pesados.purplepoint.api.utils;
 
 import com.pesados.purplepoint.api.PurplePointApplication;
-import com.pesados.purplepoint.api.model.alarm.Alarm;
-import com.pesados.purplepoint.api.model.alarm.AlarmService;
-import com.pesados.purplepoint.api.model.definition.Definition;
-import com.pesados.purplepoint.api.model.definition.DefinitionService;
-import com.pesados.purplepoint.api.model.device.Device;
-import com.pesados.purplepoint.api.model.device.DeviceService;
-import com.pesados.purplepoint.api.model.location.Location;
-import com.pesados.purplepoint.api.model.location.LocationService;
-import com.pesados.purplepoint.api.model.report.Report;
-import com.pesados.purplepoint.api.model.report.ReportService;
-import com.pesados.purplepoint.api.model.user.User;
-import com.pesados.purplepoint.api.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 class LoadDatabase {
 	private static final Logger logger = LoggerFactory.getLogger(PurplePointApplication.class);
 
-   /*
+
    // Peta si guardamos imagenes tan grandes.
-   @Bean
+  /* @Bean
   CommandLineRunner initImageDatabase(ImageService service) throws IOException {
       logger.info("Finding resource \"sample.jpg\"");
       Resource resource = new ClassPathResource("sample.jpg");
@@ -38,7 +24,6 @@ class LoadDatabase {
       logger.info("Preloading " + service.saveImage(new Image("sample.jpg","image/jpg", Base64.getEncoder().encodeToString(bdata))));
     };
   }
-*/
 
     @Bean
   CommandLineRunner initUserDatabase(UserService service) {
@@ -101,7 +86,7 @@ class LoadDatabase {
     }
 
     @Bean
-    CommandLineRunner initDefinitionDatabase(DefinitionService service) {
+	CommandLineRunner initDefinitionDatabase(DefinitionService service) {
 
         return args -> {
             logger.info("Preloading " + service.saveDefinition(new Definition("Harassment", "Sexual harassment is any form of unwelcome sexual behaviour that’s offensive, humiliating or intimidating.", "Many girls are victims of sexual harassment and violence inside and outside of school.", "noun", "en")));
@@ -110,4 +95,6 @@ class LoadDatabase {
             logger.info("Preloading " + service.saveDefinition(new Definition("Gender-based violance", "Gender-based violence is a type of physical or psychological violence against any person or group of persons on the basis of their sexual orientation or identity, sex or gender that negatively impacts on their social, physical, psychological or economic identity and well-being.", "2019 ends with the highest number of gender-based violence murders since 2015 in Spain","expression" ,"en")));
         };
     }
+*/
+
 }
