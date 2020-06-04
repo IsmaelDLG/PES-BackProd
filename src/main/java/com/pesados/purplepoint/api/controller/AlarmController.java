@@ -100,8 +100,7 @@ public class AlarmController {
 
 
 			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken)){
-				System.out.println("el usurio valido del device es" +allDevices.get(i).getUser().getUsername());
-				System.out.println("el token es" +allDevices.get(i).getFirebaseToken());
+				System.out.println("el token de usuario en es" +allDevices.get(i).getFirebaseToken());
 				result.add(allDevices.get(i));
 			}
 
