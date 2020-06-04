@@ -49,7 +49,11 @@ public class PushNotificationService {
             data.put("onMyWay", "true");
             data.put("username", username);
             fcmService.sendMessage(token, username, data);
+            logger.info("enviamos a:");
+            logger.info(username);
+            logger.info(token);
         } catch (InterruptedException | ExecutionException e) {
+            logger.info("error al notificar ayuda");
             logger.error(e.getMessage());
         }
     }

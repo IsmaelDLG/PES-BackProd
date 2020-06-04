@@ -139,6 +139,38 @@ public class UserControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.helpedUsers").value(1));
 	}
 
+	@Test
+	public void shouldIncreaseMarkedSpots() throws Exception {
+		// Login with mockup user in the database.
+
+		String token = TestUtils.doLogin(this.mockMvc);
+
+
+		this.mockMvc.perform(put("/api/v1/users/increaseMarkedSpots/isma@gmail.com").header("Authorization",token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
+				.accept(MediaType.APPLICATION_JSON))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().is(200))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.markedSpots").value(1));
+	}
+
+	@Test
+	public void shouldDecreaseMarkedSpots() throws Exception {
+		// Login with mockup user in the database.
+
+		String token = TestUtils.doLogin(this.mockMvc);
+
+
+		this.mockMvc.perform(put("/api/v1/users/decreaseMarkedSpots/isma@gmail.com").header("Authorization",token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(TestUtils.firebaseHeaderName, TestUtils.firebaseToken)
+				.accept(MediaType.APPLICATION_JSON))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().is(200))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.markedSpots").value(0));
+	}
+
 
 	public static String asJsonString(final Object obj) {
 		try {

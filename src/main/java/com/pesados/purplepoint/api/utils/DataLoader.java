@@ -38,7 +38,7 @@ class LoadDatabase {
       logger.info("Preloading " + service.saveImage(new Image("sample.jpg","image/jpg", Base64.getEncoder().encodeToString(bdata))));
     };
   }
-
+*/
 
     @Bean
   CommandLineRunner initUserDatabase(UserService service) {
@@ -104,12 +104,10 @@ class LoadDatabase {
     CommandLineRunner initDefinitionDatabase(DefinitionService service) {
 
         return args -> {
-            logger.info("Preloading " + service.saveDefinition(new Definition("Harassment", "Sexual harassment is any form of unwelcome sexual behaviour that’s offensive, humiliating or intimidating.", "Many girls are victims of sexual harassment and violence inside and outside of school.", "en")));
-            logger.info("Preloading " + service.saveDefinition(new Definition("Acoso", "El acoso sexual es cualquier forma de comportamiento sexual no deseado que es ofensivo, humillante o intimidante", "Muchas niñas son víctimas de acoso sexual y violencia dentro y fuera de la escuela.", "esp")));
-            logger.info("Preloading " + service.saveDefinition(new Definition("Violencia de genero", "La violencia de género es un tipo de violencia física o psicológica ejercida contra cualquier persona o grupo de personas sobre la base de su orientación o identidad sexual, sexo o genero que impacta de manera negativa en su identidad y bienestar social, físico, psicológico o económico.", "El 2019 termina con la cifra más alta de asesinatos por violencia de género desde 2015 en España", "esp")));
-            logger.info("Preloading " + service.saveDefinition(new Definition("Gender-based violance", "Gender-based violence is a type of physical or psychological violence against any person or group of persons on the basis of their sexual orientation or identity, sex or gender that negatively impacts on their social, physical, psychological or economic identity and well-being.", "2019 ends with the highest number of gender-based violence murders since 2015 in Spain", "en")));
+            logger.info("Preloading " + service.saveDefinition(new Definition("Harassment", "Sexual harassment is any form of unwelcome sexual behaviour that’s offensive, humiliating or intimidating.", "Many girls are victims of sexual harassment and violence inside and outside of school.", "noun", "en")));
+            logger.info("Preloading " + service.saveDefinition(new Definition("Acoso", "El acoso sexual es cualquier forma de comportamiento sexual no deseado que es ofensivo, humillante o intimidante", "Muchas niñas son víctimas de acoso sexual y violencia dentro y fuera de la escuela.", "nombre","esp")));
+            logger.info("Preloading " + service.saveDefinition(new Definition("Violencia de genero", "La violencia de género es un tipo de violencia física o psicológica ejercida contra cualquier persona o grupo de personas sobre la base de su orientación o identidad sexual, sexo o genero que impacta de manera negativa en su identidad y bienestar social, físico, psicológico o económico.", "El 2019 termina con la cifra más alta de asesinatos por violencia de género desde 2015 en España","expresion" ,"esp")));
+            logger.info("Preloading " + service.saveDefinition(new Definition("Gender-based violance", "Gender-based violence is a type of physical or psychological violence against any person or group of persons on the basis of their sexual orientation or identity, sex or gender that negatively impacts on their social, physical, psychological or economic identity and well-being.", "2019 ends with the highest number of gender-based violence murders since 2015 in Spain","expression" ,"en")));
         };
     }
-    
-    */
 }

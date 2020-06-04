@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +47,6 @@ public class UserController {
 	}
 
 	// Visibilidad Device
-	@Transactional
 	@Operation(summary = "Login User with E-mail and Password", description = "Login an %user% with an exising correct combination of password and email", tags = {"authorizations"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "successful login",
@@ -295,6 +293,52 @@ public class UserController {
 					user.setHelpedUsers(user.getHelpedUsers()+1);
 					return userService.saveUser(user);
 				}).orElseThrow(() -> new UserNotFoundException(userEmail));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
+	}
+
+	@Operation(summary = "Increase MarkedSpot", description = "Increased marked user spots", tags = {"users"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation"),
+			@ApiResponse(responseCode = "404", description = "User not found"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized")
+	})
+	@PutMapping(path = "/users/increaseMarkedSpots/{userEmail}")
+	User increaseMarkedSpots(
+			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+			@Parameter(description = "Email of the user", required = true)
+			@PathVariable String userEmail
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return userService.getUserByEmail(userEmail)
+					.map(user -> {
+						user.setMarkedSpots(user.getMarkedSpots()+1);
+						return userService.saveUser(user);
+					}).orElseThrow(() -> new UserNotFoundException(userEmail));
+		} else {
+			throw new UnauthorizedDeviceException();
+		}
+	}
+
+	@Operation(summary = "Decrease MarkedSpot", description = "Decrease marked user spots", tags = {"users"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation"),
+			@ApiResponse(responseCode = "404", description = "User not found"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized")
+	})
+	@PutMapping(path = "/users/decreaseMarkedSpots/{userEmail}")
+	User decreaseMarkedSpots(
+			@Parameter(required = false, hidden=true) @RequestHeader("Authorization") String unformatedJWT,
+			@Parameter(description = "Email of the user", required = true)
+			@PathVariable String userEmail
+	) {
+		if (this.loginSystem.checkLoggedIn(unformatedJWT)) {
+			return userService.getUserByEmail(userEmail)
+					.map(user -> {
+						user.setMarkedSpots(user.getMarkedSpots()-1);
+						return userService.saveUser(user);
+					}).orElseThrow(() -> new UserNotFoundException(userEmail));
 		} else {
 			throw new UnauthorizedDeviceException();
 		}
