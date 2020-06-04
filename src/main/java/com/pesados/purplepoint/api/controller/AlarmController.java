@@ -92,6 +92,7 @@ public class AlarmController {
 		float alarmLongitude = alarm.getLocation().getLongitude();
 
 		for (int i = 0; i < allDevices.size(); ++i) {
+			/*
 			// Parametros para el Device tratado
 			float deviceLatitude = allDevices.get(i).getLocation().getLatitude();
 			float deviceLongitude = allDevices.get(i).getLocation().getLongitude();
@@ -100,9 +101,9 @@ public class AlarmController {
 
 
 			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken)){
-				System.out.println("el token de usuario en es" +allDevices.get(i).getFirebaseToken());
+				System.out.println("el token de usuario en es" +allDevices.get(i).getFirebaseToken());*/
 				result.add(allDevices.get(i));
-			}
+			//}
 
 		}
 		return result;

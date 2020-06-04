@@ -33,7 +33,7 @@ public class Image {
 	private String type;
 
 	@Schema(description = "Image bytes.", required = true)
-	@Column(name = "picByteB64")
+	@Column(name = "picByteB64", length = 5000)
 	private String picByteB64;
 	
 	public Image() {

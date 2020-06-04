@@ -40,7 +40,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User saveUser(User newUser) {
 		if (newUser.getProfilePic() == null) {
-			Resource resource = new ClassPathResource("sample.jpg");
+			String pic = "default.png";
+			Resource resource = new ClassPathResource(pic);
 		    InputStream inputStream;
 		    byte[] bdata = null;
 			try {
@@ -52,8 +53,8 @@ public class UserServiceImpl implements UserService {
 			// Comentado porque guardar imagenes tan grandes no es compatible con la BD.
 			Image defaultImage = null;
 			try {
-				defaultImage = new Image("sample.jpg", "image/jpg",
-						Base64.getEncoder().encodeToString(ImageController.cropAndScale("image/jpg", bdata)));
+				defaultImage = new Image(pic, "image/png",
+						Base64.getEncoder().encodeToString(ImageController.cropAndScale("image/png", bdata)));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
