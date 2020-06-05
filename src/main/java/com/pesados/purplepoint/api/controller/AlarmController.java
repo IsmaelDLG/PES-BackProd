@@ -88,22 +88,24 @@ public class AlarmController {
 		List<Device> result = new ArrayList<>();
 		// Parametros de la alarma
 		String alarmToken = alarm.getDeviceToken();
-		float alarmLatitude = alarm.getLocation().getLatitude();
-		float alarmLongitude = alarm.getLocation().getLongitude();
+		//float alarmLatitude = alarm.getLocation().getLatitude();
+		//float alarmLongitude = alarm.getLocation().getLongitude();
 
 		for (int i = 0; i < allDevices.size(); ++i) {
 			/*
 			// Parametros para el Device tratado
 			float deviceLatitude = allDevices.get(i).getLocation().getLatitude();
 			float deviceLongitude = allDevices.get(i).getLocation().getLongitude();
-			String deviceToken = allDevices.get(i).getFirebaseToken();
 			System.out.println("el token es" +allDevices.get(i).getFirebaseToken());
+			*/
+			String deviceToken = allDevices.get(i).getFirebaseToken();
 
 
-			if (LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) && !alarmToken.equals(deviceToken)){
-				System.out.println("el token de usuario en es" +allDevices.get(i).getFirebaseToken());*/
+			if (/*LocationController.isLocationInA500MeterRadius(alarmLatitude, alarmLongitude, deviceLatitude, deviceLongitude) &&*/ 
+				!alarmToken.equals(deviceToken)){
+				//System.out.println("el token de usuario en es" +allDevices.get(i).getFirebaseToken());
 				result.add(allDevices.get(i));
-			//}
+			}
 
 		}
 		return result;
